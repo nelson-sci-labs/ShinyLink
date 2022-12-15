@@ -242,10 +242,10 @@ mod_simple_settings_server <- function(id, state, parent){
     ns <- session$ns
 
     observe({
-      print(input$matching_variables)
-      print(input$string_matching)
-      print(input$numeric_matching)
-      print(input$partial_matching)
+      # print(input$matching_variables)
+      # print(input$string_matching)
+      # print(input$numeric_matching)
+      # print(input$partial_matching)
 
       state$matching_variables <- input$matching_variables
       state$string_matching <- input$string_matching
