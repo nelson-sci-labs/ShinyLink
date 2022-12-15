@@ -188,7 +188,7 @@ app_ui <- function(request) {
           tabItem(tabName = "advanced_results",
                   mod_advanced_results_ui("advanced_results")),
           tabItem(tabName = "advanced_details",
-                  mod_advanced_details_ui("mod_advanced_details"))
+                  mod_advanced_details_ui("advanced_details"))
 
       )),
 

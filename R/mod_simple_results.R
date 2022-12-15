@@ -265,10 +265,10 @@ mod_simple_results_server <- function(id, state, parent){
       dfA <- state$state_dfA
       dfB <- state$state_dfB
 
-      print(state$matching_variables)
-      print(state$string_matching)
-      print(state$numeric_matching)
-      print(state$partial_matching)
+      # print(state$matching_variables)
+      # print(state$string_matching)
+      # print(state$numeric_matching)
+      # print(state$partial_matching)
 
       # matches.out <- fastLink(
       #   dfA = dfA, dfB = dfB,

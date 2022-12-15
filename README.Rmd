@@ -42,7 +42,7 @@ For windows users, please make sure that you have the latest R (>= 4.2.2) and RT
 
 ### MacOS X platform
 
-Download and install the latest version of R for your Mac From CRAN: https://cran.r-project.org/bin/macosx/
+Download and install the latest version of R (>= 4.2.2) for your Mac From CRAN: https://cran.r-project.org/bin/macosx/
 
 
 ### Install devtools and ShinyLink
