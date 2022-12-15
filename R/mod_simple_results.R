@@ -23,9 +23,9 @@ mod_simple_results_ui <- function(id){
         hr(),
         br(),
         tags$label("Selected row(s) of Matching Results table:"),
-        fluidRow(column(8, verbatimTextOutput(ns("info-main"))),
+        fluidRow(column(6, verbatimTextOutput(ns("info-main"))),
                  column(
-                   4,
+                   6,
                    downloadButton(ns("download_selected"), "Download Selected")
                  )),
         hr(),
