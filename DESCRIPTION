@@ -1,6 +1,6 @@
 Package: ShinyLink
 Title: RShiny Based Record Linkage Tool
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(person('Yaoxiang', 'Li', email = 'liyaoxiang@outlook.com', role = c('cre', 'aut'), comment = c(ORCID = '0000-0001-9200-1016')),
     person("Shufu", "Chen", , "shufuchen@nelsonscilabs.com", role = c("aut")),       
     person("Mehar", "Cheema", , "mehar.cheema9@gmail.com", role = c("aut")),       

@@ -23,11 +23,14 @@ mod_uploading_ui <- function(id){
             label = "Select Sample data set",
             multiple = FALSE,
             accept = c(
-              "text/csv",
-              "text/comma-separated-values,text/plain",
+              # "text/csv",
+              # "text/comma-separated-values,text/plain",
               ".csv",
               ".xlsx",
-              ".sas7bdat"
+              ".sas7bdat",
+              ".sav",
+              ".dta",
+              ".tsv"
             )
           ),
           fileInput(
@@ -35,14 +38,17 @@ mod_uploading_ui <- function(id){
             label = "Select Matching data set",
             multiple = FALSE,
             accept = c(
-              "text/csv",
-              "text/comma-separated-values,text/plain",
+              # "text/csv",
+              # "text/comma-separated-values,text/plain",
               ".csv",
               ".xlsx",
-              ".sas7bdat"
+              ".sas7bdat",
+              ".sav",
+              ".dta",
+              ".tsv"
             )
           ),
-          HTML("<p><i>Supported formats: csv, Excel, SAS, SPSS, Stata.</i></p>")
+          HTML("<p><i>Supported formats: Excel, csv, tsv, SAS, SPSS, Stata.</i></p>")
         ),
         column(
           width = 3,
@@ -61,9 +67,9 @@ mod_uploading_ui <- function(id){
             HTML(
               "<a href='https://raw.githubusercontent.com/nelson-sci-labs/ShinyLink/main/inst/app/www/lkselectedrecs.dta'> <i class='fa fa-download'> </i> dta</a>"
             ),
-            HTML(
-              "<a href='https://raw.githubusercontent.com/nelson-sci-labs/ShinyLink/main/inst/app/www/lkselectedrecs.csv'> <i class='fa fa-download'> </i> csv</a>"
-            ),
+            # HTML(
+            #   "<a href='https://raw.githubusercontent.com/nelson-sci-labs/ShinyLink/main/inst/app/www/lkselectedrecs.csv'> <i class='fa fa-download'> </i> csv</a>"
+            # ),
             br(),
             br(),
             HTML("<h5>Matching data</h5>"),
@@ -79,9 +85,9 @@ mod_uploading_ui <- function(id){
             HTML(
               "<a href='https://raw.githubusercontent.com/nelson-sci-labs/ShinyLink/main/inst/app/www/redcapoutput.dta'> <i class='fa fa-download'> </i> dta</a>"
             ),
-            HTML(
-              "<a href='https://raw.githubusercontent.com/nelson-sci-labs/ShinyLink/main/inst/app/www/redcapoutput.csv'> <i class='fa fa-download'> </i> csv</a>"
-            ),
+            # HTML(
+            #   "<a href='https://raw.githubusercontent.com/nelson-sci-labs/ShinyLink/main/inst/app/www/redcapoutput.csv'> <i class='fa fa-download'> </i> csv</a>"
+            # ),
             br(),
             br(),
             HTML(
