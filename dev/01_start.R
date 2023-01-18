@@ -43,21 +43,33 @@ usethis::use_lifecycle_badge("Experimental")
 usethis::use_news_md(open = FALSE)
 
 ## Adding dependencies
+usethis::use_package("dplyr", min_version = TRUE, type = "Suggests")
+
+usethis::use_package("DT", min_version = TRUE)
+usethis::use_package("fastLink", min_version = TRUE)
+usethis::use_package("gender", min_version = TRUE)
+usethis::use_package("ggplot2", min_version = TRUE)
+usethis::use_package("ggvenn", min_version = TRUE)
+usethis::use_package("haven", min_version = TRUE)
+usethis::use_package("htmlwidgets", min_version = TRUE)
+usethis::use_package("jsonlite", min_version = TRUE)
+usethis::use_package("lubridate", min_version = TRUE)
+usethis::use_package("magrittr", min_version = TRUE)
+
+usethis::use_package("purrr", min_version = TRUE, type = "Suggests")
+
+usethis::use_package("readxl", min_version = TRUE)
 usethis::use_package("shiny")
-usethis::use_package("shinyWidgets")
-usethis::use_package("shinydashboard")
-usethis::use_package("shinydashboardPlus")
-usethis::use_package("fastLink")
-usethis::use_package("DT")
-usethis::use_package("gender")
-usethis::use_package("jsonlite")
-usethis::use_package("readxl")
-usethis::use_package("haven")
-usethis::use_package("lubridate")
-usethis::use_package("tidyr")
-usethis::use_package("ggvenn")
-usethis::use_package("htmlwidgets")
-usethis::use_package("magrittr")
+usethis::use_package("shinydashboard", min_version = TRUE)
+usethis::use_package("shinydashboardPlus", min_version = TRUE)
+usethis::use_package("shinyWidgets", min_version = TRUE)
+usethis::use_package("tidyr", min_version = TRUE)
+usethis::use_package("tidyselect", min_version = TRUE)
+
+usethis::use_package("vroom", min_version = TRUE)
+
+
+usethis::use_pipe(export = TRUE)
 
 ## Use git ----
 usethis::use_git()

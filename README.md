@@ -19,10 +19,9 @@ and bioinformatics precedent toward increased data interchangeability.
 ## Installation
 
 To install a stable version, you can install ShinyLink from CRAN.
-(Coming soon)
 
 ``` r
-# install.packages("ShinyLink")
+install.packages("ShinyLink")
 ```
 
 To get a bug fix, or use a feature from the development version, you can
@@ -39,8 +38,8 @@ For windows users, please make sure that you have the latest R (\>=
 
 ### MacOS X platform
 
-Download and install the latest version of R for your Mac From CRAN:
-<https://cran.r-project.org/bin/macosx/>
+Download and install the latest version of R (\>= 4.2.2) for your Mac
+From CRAN: <https://cran.r-project.org/bin/macosx/>
 
 ### Install devtools and ShinyLink
 

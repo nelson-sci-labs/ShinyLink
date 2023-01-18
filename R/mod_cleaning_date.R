@@ -102,8 +102,8 @@ mod_cleaning_date_ui <- function(id){
       column(
         width = 6,
         actionBttn(
-          inputId = ns("next_imputation"),
-          label = "Next: Impute Missing Gender ",
+          inputId = ns("next_simple_settings"),
+          label = "Next: Simple Match Settings",
           style = "simple",
           color = "primary",
           icon = icon("arrow-right"),
@@ -121,6 +121,7 @@ mod_cleaning_date_ui <- function(id){
 
 #' cleaning_date Server Functions
 #' @importFrom utils head
+#' @import lubridate
 #' @noRd
 mod_cleaning_date_server <- function(id, state, parent){
   moduleServer( id, function(input, output, session){
@@ -276,8 +277,8 @@ mod_cleaning_date_server <- function(id, state, parent){
     })
 
     # Next page button redirection
-    observeEvent(input$next_imputation, {
-      updateTabItems(session = parent, "tabs", "imputation")
+    observeEvent(input$next_simple_settings, {
+      updateTabItems(session = parent, "tabs", "simple_settings")
     })
   })
 }

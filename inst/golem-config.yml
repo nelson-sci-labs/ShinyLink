@@ -1,8 +1,8 @@
 default:
   golem_name: ShinyLink
-  golem_version: 0.1.0
+  golem_version: 0.2.2
   app_prod: no
 production:
   app_prod: yes
 dev:
-  golem_wd: C:/Users/bach/Dropbox/Shiny/shinylink
+  golem_wd: !expr here::here()

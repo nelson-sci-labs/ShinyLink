@@ -56,7 +56,7 @@ mod_advanced_results_ui <- function(id){
 }
 
 #' advanced_results Server Functions
-#'
+#' @import fastLink ggplot2 ggvenn
 #' @noRd
 mod_advanced_results_server <- function(id, state, session){
   moduleServer( id, function(input, output, session){
@@ -228,11 +228,6 @@ mod_advanced_results_server <- function(id, state, session){
       dfA <- state$state_dfA
       dfB <- state$state_dfB
 
-      # print(state$matching_variables)
-      # print(state$string_matching)
-      # print(state$numeric_matching)
-      # print(state$partial_matching)
-
       # matches.out <- fastLink(
       #   dfA = dfA, dfB = dfB,
       #   varnames = c("firstname", "middlename", "lastname", "birthday", "race", "sex"),
@@ -276,8 +271,8 @@ mod_advanced_results_server <- function(id, state, session){
         fl.out = matches.out,
         threshold.match = 0.85
       )
-      matched_dfs %<>%
-        dplyr::select(-any_of(
+      matched_dfs <- matched_dfs %>%
+        dplyr::select(-tidyselect::any_of(
           c(
             'gamma.1',
             'gamma.2',
@@ -296,11 +291,13 @@ mod_advanced_results_server <- function(id, state, session){
       for (i in 1:nrow(matches.out$matches)) {
         dfA_current <-  dfA %>% dplyr::select(varnames)
         dfA_current <- dfA_current[matches.out$matches[i, ]$inds.a, ]
-        dfA_current %<>% dplyr::mutate(`Data source` = "Sample Dataset", .before = "firstname")
+        dfA_current <- dfA_current %>%
+          dplyr::mutate(`Data source` = "Sample Dataset", .before = "firstname")
 
         dfB_current <-  dfB %>% dplyr::select(varnames)
         dfB_current <- dfB_current[matches.out$matches[i, ]$inds.b, ]
-        dfB_current %<>% dplyr::mutate(`Data source` = "Matching Dataset", .before = "firstname")
+        dfB_current <- dfB_current %>%
+          dplyr::mutate(`Data source` = "Matching Dataset", .before = "firstname")
 
         subdat[[i]] <- dplyr::as_tibble(dplyr::bind_rows(dfA_current, dfB_current))
       }
@@ -319,16 +316,15 @@ mod_advanced_results_server <- function(id, state, session){
           values_to = "Match Count"
         ) %>% dplyr::mutate(`Match Count` = as.numeric(`Match Count`))
 
-      library(ggplot2)
+      # library(ggplot2)
       p <-
-        ggplot(plot_summary,
-               aes(x = `Match Type`, y = `Match Count`, fill = `Match Type`)) +
-        geom_bar(stat = "identity") + theme_minimal() + scale_fill_manual(values =
+        ggplot2::ggplot(plot_summary,
+                        ggplot2::aes(x = `Match Type`, y = `Match Count`, fill = `Match Type`)) +
+        ggplot2::geom_bar(stat = "identity") + ggplot2::theme_minimal() + ggplot2::scale_fill_manual(values =
                                                                             c("#3b4992", "#ee2200", "#008b45", "#631779"))
 
       p
 
-      # print(matched_summary)
 
       sendSweetAlert(
         session = session,
@@ -421,11 +417,11 @@ mod_advanced_results_server <- function(id, state, session){
           values_to = "Match Count"
         ) %>% dplyr::mutate(`Match Count` = as.numeric(`Match Count`))
 
-      library(ggplot2)
+      # library(ggplot2)
       p <-
-        ggplot(plot_summary,
-               aes(x = `Match Type`, y = `Match Count`, fill = `Match Type`)) +
-        geom_bar(stat = "identity") + theme_minimal() + scale_fill_manual(values =
+        ggplot2::ggplot(plot_summary,
+                        ggplot2::aes(x = `Match Type`, y = `Match Count`, fill = `Match Type`)) +
+        ggplot2::geom_bar(stat = "identity") + ggplot2::theme_minimal() + ggplot2::scale_fill_manual(values =
                                                                             c("#3b4992", "#ee2200", "#008b45", "#631779"))
 
       p
@@ -436,13 +432,13 @@ mod_advanced_results_server <- function(id, state, session){
       n_dfA.unmatch <- nrow(matched_values()[['dfA.unmatch']])
       n_dfB.unmatch <- nrow(matched_values()[['dfB.unmatch']])
       n_match <- nrow(matched_values()[['Dat']])
-      library("ggvenn")
+      # library("ggvenn")
       x <- list(
         Sample = c((1:n_dfA.unmatch)+3e9, 1:n_match),
         Matching = c(-(1:n_dfB.unmatch) + 5e7, 1:n_match)
       )
       names(x) <- c("Sample Dataset", "Matching Dataset")
-      ggvenn(x)
+      ggvenn::ggvenn(x)
     })
     # Download selected rows --------------------------------------------------
 
@@ -462,3 +458,6 @@ mod_advanced_results_server <- function(id, state, session){
 
 ## To be copied in the server
 # mod_advanced_results_server("advanced_results_1")
+
+utils::globalVariables(c("Match Count", "Match Type"))
+

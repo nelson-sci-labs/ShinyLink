@@ -59,7 +59,7 @@ mod_advanced_parameters_ui <- function(id){
     fluidRow(
       box(
         width = 6,
-        title = "EM (Expectation–maximization) estimation & Dedupe options",
+        title = "EM (Expectation maximization) estimation & Dedupe options",
         status = "orange",
         solidHeader = FALSE,
         collapsible = FALSE,
@@ -134,19 +134,6 @@ mod_advanced_parameters_server <- function(id, state, session){
       state$n_cores <- input$n_cores
       state$tol_em <- input$tol_em
       state$threshold_match <- input$threshold_match
-
-      # print(state$cut_a)
-      # print(state$cut_p)
-      # print(state$w_lambda)
-      # print(state$w_pi)
-
-      # print(state$estimate_only)
-      # print(state$dedupe_matches)
-      # print(state$linprog_dedupe)
-
-      # print(state$n_cores)
-      # print(state$tol_em)
-      # print(state$threshold_match)
 
     })
   })

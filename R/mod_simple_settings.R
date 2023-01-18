@@ -203,8 +203,8 @@ mod_simple_settings_ui <- function(id){
       column(
         width = 6,
         actionBttn(
-          inputId = ns("previous_imputation"),
-          label = "Previous: Impute Missing Gender ",
+          inputId = ns("previous_date_format"),
+          label = "Previous: Format Dates",
           style = "simple",
           color = "primary",
           icon = icon("arrow-left"),
@@ -242,10 +242,7 @@ mod_simple_settings_server <- function(id, state, parent){
     ns <- session$ns
 
     observe({
-      # print(input$matching_variables)
-      # print(input$string_matching)
-      # print(input$numeric_matching)
-      # print(input$partial_matching)
+
 
       state$matching_variables <- input$matching_variables
       state$string_matching <- input$string_matching
@@ -254,8 +251,8 @@ mod_simple_settings_server <- function(id, state, parent){
     })
 
     # Previous page button redirection
-    observeEvent(input$previous_imputation, {
-      updateTabItems(session = parent, "tabs", "imputation")
+    observeEvent(input$previous_date_format, {
+      updateTabItems(session = parent, "tabs", "date_format")
     })
 
     # Next page button redirection

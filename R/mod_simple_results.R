@@ -88,7 +88,7 @@ mod_simple_results_ui <- function(id){
 }
 
 #' simple_results Server Functions
-#' @import fastLink
+#' @import fastLink ggplot2 ggvenn dplyr grid
 #' @importFrom DT renderDT datatable
 #' @importFrom jsonlite fromJSON toJSON
 #' @importFrom htmlwidgets JS
@@ -265,11 +265,6 @@ mod_simple_results_server <- function(id, state, parent){
       dfA <- state$state_dfA
       dfB <- state$state_dfB
 
-      # print(state$matching_variables)
-      # print(state$string_matching)
-      # print(state$numeric_matching)
-      # print(state$partial_matching)
-
       # matches.out <- fastLink(
       #   dfA = dfA, dfB = dfB,
       #   varnames = c("firstname", "middlename", "lastname", "birthday", "race", "sex"),
@@ -279,7 +274,7 @@ mod_simple_results_server <- function(id, state, parent){
       #   n.cores = 64
       # )
 
-      matches.out <- fastLink(
+      matches.out <- fastLink::fastLink(
         dfA = dfA,
         dfB = dfB,
         varnames = state$matching_variables,
@@ -295,14 +290,14 @@ mod_simple_results_server <- function(id, state, parent){
       dfB.unmatch <- dfB[-matches.out$matches$inds.b, ]
 
 
-      matched_dfs <- getMatches(
+      matched_dfs <- fastLink::getMatches(
         dfA = dfA,
         dfB = dfB,
         fl.out = matches.out,
         threshold.match = 0.85
       )
-      matched_dfs %<>%
-        dplyr::select(-any_of(
+      matched_dfs <- matched_dfs %>%
+        dplyr::select(-tidyselect::any_of(
           c(
             'gamma.1',
             'gamma.2',
@@ -321,11 +316,13 @@ mod_simple_results_server <- function(id, state, parent){
       for (i in 1:nrow(matches.out$matches)) {
         dfA_current <-  dfA %>% dplyr::select(varnames)
         dfA_current <- dfA_current[matches.out$matches[i, ]$inds.a, ]
-        dfA_current %<>% dplyr::mutate(`Data source` = "Sample Dataset", .before = "firstname")
+        dfA_current <- dfA_current %>%
+          dplyr::mutate(`Data source` = "Sample Dataset", .before = "firstname")
 
         dfB_current <-  dfB %>% dplyr::select(varnames)
         dfB_current <- dfB_current[matches.out$matches[i, ]$inds.b, ]
-        dfB_current %<>% dplyr::mutate(`Data source` = "Matching Dataset", .before = "firstname")
+        dfB_current <- dfB_current %>%
+          dplyr::mutate(`Data source` = "Matching Dataset", .before = "firstname")
 
         subdat[[i]] <- dplyr::as_tibble(dplyr::bind_rows(dfA_current, dfB_current))
       }
@@ -344,16 +341,14 @@ mod_simple_results_server <- function(id, state, parent){
           values_to = "Match Count"
         ) %>% dplyr::mutate(`Match Count` = as.numeric(`Match Count`))
 
-      library(ggplot2)
+      # library(ggplot2)
       p <-
-        ggplot(plot_summary,
-               aes(x = `Match Type`, y = `Match Count`, fill = `Match Type`)) +
-        geom_bar(stat = "identity") + theme_minimal() + scale_fill_manual(values =
+        ggplot2::ggplot(plot_summary,
+                        ggplot2::aes(x = `Match Type`, y = `Match Count`, fill = `Match Type`)) +
+        ggplot2::geom_bar(stat = "identity") + ggplot2::theme_minimal() + ggplot2::scale_fill_manual(values =
                                                                             c("#3b4992", "#ee2200", "#008b45", "#631779"))
 
       p
-
-      # print(matched_summary)
 
       sendSweetAlert(
         session = session,
@@ -367,11 +362,13 @@ mod_simple_results_server <- function(id, state, parent){
 
       matched_results <- list(
         Dat = Dat,
+        matches.out = matches.out,
         matched_summary = matched_summary,
         dfA.match = dfA.match,
         dfA.unmatch = dfA.unmatch,
         dfB.match = dfB.match,
-        dfB.unmatch = dfB.unmatch
+        dfB.unmatch = dfB.unmatch,
+        matched_union = dplyr::bind_rows(matched_dfs, dfA.unmatch, dfB.unmatch)
       )
       state$matched_results <- matched_results
       return(matched_results)
@@ -446,11 +443,10 @@ mod_simple_results_server <- function(id, state, parent){
           values_to = "Match Count"
         ) %>% dplyr::mutate(`Match Count` = as.numeric(`Match Count`))
 
-      library(ggplot2)
       p <-
-        ggplot(plot_summary,
-               aes(x = `Match Type`, y = `Match Count`, fill = `Match Type`)) +
-        geom_bar(stat = "identity") + theme_minimal() + scale_fill_manual(values =
+        ggplot2::ggplot(plot_summary,
+                        ggplot2::aes(x = `Match Type`, y = `Match Count`, fill = `Match Type`)) +
+        ggplot2::geom_bar(stat = "identity") + ggplot2::theme_minimal() + ggplot2::scale_fill_manual(values =
                                                                             c("#3b4992", "#ee2200", "#008b45", "#631779"))
 
       p
@@ -461,13 +457,15 @@ mod_simple_results_server <- function(id, state, parent){
       n_dfA.unmatch <- nrow(matched_values()[['dfA.unmatch']])
       n_dfB.unmatch <- nrow(matched_values()[['dfB.unmatch']])
       n_match <- nrow(matched_values()[['Dat']])
-      library("ggvenn")
+      library("ggvenn") # Has to be removed for cran version
+      # Warning: Error in inner_join: could not find function "inner_join"
+
       x <- list(
         Sample = c((1:n_dfA.unmatch)+3e9, 1:n_match),
         Matching = c(-(1:n_dfB.unmatch) + 5e7, 1:n_match)
       )
       names(x) <- c("Sample Dataset", "Matching Dataset")
-      ggvenn(x)
+      ggvenn::ggvenn(x)
 
     })
 
@@ -484,6 +482,71 @@ mod_simple_results_server <- function(id, state, parent){
       }
     )
 
+
+    # Update matched results based on selection -------------------------------
+
+    observe({
+
+      if (!is.null(input[["matched_rows_selected"]])) {
+        matched_rows_selected <- input[["matched_rows_selected"]] + 1
+
+        state$matched_results[['matched_intersect']] <-
+          matched_values()[['Dat']][matched_rows_selected, ]
+
+        matches.out <- state$matched_results[['matches.out']]
+
+        # Testing only
+        # dfA <- readxl::read_excel('inst/app/www/lkselectedrecs_cleaned.xlsx')
+        # dfB <- readxl::read_excel('inst/app/www/redcapoutput_cleaned.xlsx')
+        # matched_rows_selected <- c(1, 2, 3, 7)
+        #
+        # matches.out <- fastLink::fastLink(
+        #   dfA = dfA, dfB = dfB,
+        #   varnames = c("firstname", "middlename", "lastname", "race", "sex"),
+        #   stringdist.match = c("firstname", "middlename", "lastname", "race", "sex"),
+        #   # numeric.match =
+        #   partial.match = c("firstname", "lastname"),
+        #   n.cores = 64
+        # )
+        matches.out.manual <- matches.out
+        matches.out.manual$matches <- matches.out$matches[matched_rows_selected, ]
+        matches.out.manual$patterns <- matches.out$patterns[matched_rows_selected, ]
+        matches.out.manual$posterior <- matches.out$posterior[matched_rows_selected]
+
+        dfA.match <- dfA[matches.out.manual$matches$inds.a, ]
+        dfA.unmatch <- dfA[-matches.out.manual$matches$inds.a, ]
+        dfB.match <- dfB[matches.out.manual$matches$inds.b, ]
+        dfB.unmatch <- dfB[-matches.out.manual$matches$inds.b, ]
+
+        matched_dfs <- fastLink::getMatches(
+          dfA = dfA,
+          dfB = dfB,
+          fl.out = matches.out.manual,
+          threshold.match = 0.85,
+          combine.dfs = TRUE
+        )
+        matched_dfs <- matched_dfs %>%
+          dplyr::select(-tidyselect::any_of(
+            c(
+              'gamma.1',
+              'gamma.2',
+              'gamma.3',
+              'gamma.4',
+              'gamma.5',
+              'gamma.6',
+              'posterior'
+            )
+          ))
+
+        state$matched_results[['matched_union']] <- dplyr::bind_rows(matched_dfs, dfA.unmatch, dfB.unmatch)
+        state$matched_results[['dfA.unmatch']] <- dfA.unmatch
+        state$matched_results[['dfB.unmatch']] <- dfB.unmatch
+
+      } else {
+        state$matched_results[['matched_intersect']] <-
+          dplyr::as_tibble(matched_values()[['Dat']])
+      }
+    })
 
 
 
@@ -504,3 +567,7 @@ mod_simple_results_server <- function(id, state, parent){
 
 ## To be copied in the server
 # mod_simple_results_server("simple_results_1")
+
+
+utils::globalVariables(c("Match Count", "Match Type"))
+

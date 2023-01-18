@@ -177,7 +177,7 @@ mod_cleaning_assignment_ui <- function(id){
 mod_cleaning_assignment_server <- function(id, state, parent){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-    library(magrittr)
+    # library(magrittr)
     # pipe operator friendly set column names function
 
     set_col_names <- function(.data,
@@ -287,42 +287,6 @@ mod_cleaning_assignment_server <- function(id, state, parent){
       #   type = "success"
       # )
     })
-
-    # observe({
-    #   # TODO Testing purpose only
-    #   # TODO remove all print functions after development
-    #   print("Current selections for dfA")
-    #   print(input$firstname_dfA)
-    #   print(input$middlename_dfA)
-    #   print(input$lastname_dfA)
-    #   print(input$housenum_dfA)
-    #   print(input$streetname_dfA)
-    #   print(input$city_dfA)
-    #   print(input$birthyear_dfA)
-    #   print(input$birthday_dfA)
-    #   print(input$race_dfA)
-    #   print(input$sex_dfA)
-    # })
-
-    observe({
-
-    })
-
-    # observe({
-    #   # TODO Testing purpose only
-    #   # TODO remove all print functions after development
-    #   print("Current selections for dfB")
-    #   print(input$firstname_dfB)
-    #   print(input$middlename_dfB)
-    #   print(input$lastname_dfB)
-    #   print(input$housenum_dfB)
-    #   print(input$streetname_dfB)
-    #   print(input$city_dfB)
-    #   print(input$birthyear_dfB)
-    #   print(input$birthday_dfB)
-    #   print(input$race_dfB)
-    #   print(input$sex_dfB)
-    # })
 
     assigned_dataset_a <- reactive({
 

@@ -12,20 +12,22 @@ mod_simple_details_ui <- function(id){
   tagList(
     br(),
     fluidRow(
-      column(6,
+      column(12,
              box(
                width = 12,
-               title = "Matched in Sample Dataset",
+               title = "Union Matched Dataset",
                status = "success",
                solidHeader = FALSE,
                collapsible = FALSE,
                column(12, DT::dataTableOutput(ns('matched_dfA')))
              )
-      ),
-      column(6,
+      )
+    ),
+    fluidRow(
+      column(12,
              box(
                width = 12,
-               title = "Matched in Matching Dataset",
+               title = "Intersect Matched Dataset",
                status = "success",
                solidHeader = FALSE,
                collapsible = FALSE,
@@ -98,7 +100,7 @@ mod_simple_details_server <- function(id, state, parent){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     output[["matched_dfA"]] <- DT::renderDataTable(
-      state$matched_results[['dfA.match']],
+      state$matched_results[['matched_union']],
       caption = 'Data in the Sample data set',
       extensions = 'Buttons',
       selection = "single",
@@ -124,37 +126,35 @@ mod_simple_details_server <- function(id, state, parent){
       ),
       class = 'compact hover row-border nowrap stripe'
     )
-
+    output[["matched_dfB"]] <- DT::renderDataTable(
+      state$matched_results[['matched_intersect']],
+      caption = 'Data in the Sample data set',
+      extensions = 'Buttons',
+      selection = "single",
+      rownames = FALSE,
+      server = FALSE,
+      options = list(
+        autoWidth = FALSE,
+        scrollX = TRUE,
+        lengthMenu = list(c(5, 20, 50,-1), c('default', '20', '50', 'All')),
+        pageLength = 5,
+        dom = 'Blfrtip',
+        buttons =
+          list(
+            "copy",
+            list(
+              extend = "collection"
+              ,
+              buttons = c("csv", "excel", "pdf")
+              ,
+              text = "Download"
+            )
+          )
+      ),
+      class = 'compact hover row-border nowrap stripe'
+    )
     output[["unmatched_dfA"]] <- DT::renderDataTable(
       state$matched_results[['dfA.unmatch']],
-      caption = 'Data in the Sample data set',
-      extensions = 'Buttons',
-      selection = "single",
-      rownames = FALSE,
-      server = FALSE,
-      options = list(
-        autoWidth = FALSE,
-        scrollX = TRUE,
-        lengthMenu = list(c(5, 20, 50,-1), c('default', '20', '50', 'All')),
-        pageLength = 5,
-        dom = 'Blfrtip',
-        buttons =
-          list(
-            "copy",
-            list(
-              extend = "collection"
-              ,
-              buttons = c("csv", "excel", "pdf")
-              ,
-              text = "Download"
-            )
-          )
-      ),
-      class = 'compact hover row-border nowrap stripe'
-    )
-
-    output[["matched_dfB"]] <- DT::renderDataTable(
-      state$matched_results[['dfB.match']],
       caption = 'Data in the Sample data set',
       extensions = 'Buttons',
       selection = "single",

@@ -107,7 +107,6 @@ mod_cleaning_duplicate_ui <- function(id){
 }
 
 #' cleaning_duplicate Server Functions
-#' @import magrittr
 #' @noRd
 mod_cleaning_duplicate_server <- function(id, state, parent){
   moduleServer( id, function(input, output, session){
@@ -125,7 +124,7 @@ mod_cleaning_duplicate_server <- function(id, state, parent){
       else {
         data <- state$dfA_uploaded
       }
-      
+
       state$dfA_cleaned_duplicate <- data # update the state
 
       return(data)

@@ -110,11 +110,6 @@ app_ui <- function(request) {
               "Format Dates",
               tabName = "date_format",
               icon = icon("calendar")
-            ),
-            menuSubItem(
-              "Impute Missing Gender ",
-              tabName = "imputation",
-              icon = icon("circle-question")
             )
           ),
           menuItem(
@@ -145,6 +140,11 @@ app_ui <- function(request) {
               "Advanced Settings",
               tabName = "advanced_parameters",
               icon = icon("sliders")
+            ),
+            menuSubItem(
+              "Impute Missing Gender ",
+              tabName = "imputation",
+              icon = icon("circle-question")
             ),
             menuSubItem(
               "Matching Results",
@@ -193,7 +193,7 @@ app_ui <- function(request) {
       )),
 
       # Footer -----------------------------------------------------------------
-      footer = dashboardFooter(right = "Nelson Scientific Labs, LLC., 2022")
+      footer = dashboardFooter(right = "Nelson Scientific Labs, LLC., 2023")
 
       # End of UI --------------------------------------------------------------
     )

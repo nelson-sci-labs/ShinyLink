@@ -1,26 +1,24 @@
 Package: ShinyLink
-Title: RShiny Based Record Linkage Tool
-Version: 0.1.1
-Authors@R: c(person('Yaoxiang', 'Li', email = 'liyaoxiang@outlook.com', role = c('cre', 'aut'), comment = c(ORCID = '0000-0001-9200-1016')),
-    person("Shufu", "Chen", , "shufuchen@nelsonscilabs.com", role = c("aut")),       
-    person("Mehar", "Cheema", , "mehar.cheema9@gmail.com", role = c("aut")),       
-    person("Mingzhuo", "Tian", , "tianmingzhuo@outlook.com", role = c("aut")),
-    person("John", "Tyburski", , "jtyburski@nelsonscilabs.com", role = c("aut")),
-    person("Amrita", "Cheema", , "akc27@georgetown.edu", role = c("aut"))
+Title: 'Shiny' Based Record Linkage Tool
+Version: 0.2.2
+Authors@R: c(
+    person("Shufu", "Chen", role = c("aut"), email = "shufuchen@nelsonscilabs.com"),       
+    person("John", "Tyburski", role = c("aut"), email = "jtyburski@nelsonscilabs.com"),
+    person('Yaoxiang', 'Li', role = c("aut", "cre"), email = 'liyaoxiang@outlook.com'),
+    person("Amrita", "Cheema", role = c("aut"), email = "akc27@georgetown.edu")
     )
-Description: ShinyLink is the bridge between existing vigorous open-source record linkage algorithms and an urgently needed accessible platform that eliminates cost and programming barriers and delivers a public health and bioinformatics precedent toward increased data interchangeability.
-License: GPL-3 | file LICENSE
+Description: A bridge is created between existing robust open-source record linkage algorithms and an urgently needed user-friendly platform that removes financial and technical barriers, setting a new standard for data interoperability in public health and bioinformatics. The 'fastLink' algorithms are used for matching. Ted Enamorado et al. (2019) <doi:10.1017/S0003055418000783>.
+SystemRequirements: C++11
+License: GPL-3
 Imports: 
-    attempt,
     config (>= 0.3.1),
-    DT,
+    DT (>= 0.25),
     fastLink,
     gender,
+    ggplot2,
     ggvenn,
-    glue,
     golem (>= 0.3.5),
     haven,
-    htmltools,
     htmlwidgets,
     jsonlite,
     lubridate,
@@ -30,9 +28,13 @@ Imports:
     shinydashboard,
     shinydashboardPlus,
     shinyWidgets,
-    tidyr
+    tidyr,
+    tidyselect,
+    vroom
 Suggests: 
+    dplyr,
     knitr,
+    purrr,
     rmarkdown,
     spelling,
     testthat (>= 3.0.0)

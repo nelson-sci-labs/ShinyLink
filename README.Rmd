@@ -25,10 +25,10 @@ ShinyLink is the bridge between existing vigorous open-source record linkage alg
 
 ## Installation
 
-To install a stable version, you can install ShinyLink from CRAN. (Coming soon)
+To install a stable version, you can install ShinyLink from CRAN.
 
 ```r
-# install.packages("ShinyLink")
+install.packages("ShinyLink")
 ```
 
 To get a bug fix, or use a feature from the development version, you can install ShinyLink from GitHub.
