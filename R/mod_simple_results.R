@@ -508,6 +508,10 @@ mod_simple_results_server <- function(id, state, parent){
         #   partial.match = c("firstname", "lastname"),
         #   n.cores = 64
         # )
+
+        dfA <- state$state_dfA
+        dfB <- state$state_dfB
+
         matches.out.manual <- matches.out
         matches.out.manual$matches <- matches.out$matches[matched_rows_selected, ]
         matches.out.manual$patterns <- matches.out$patterns[matched_rows_selected, ]

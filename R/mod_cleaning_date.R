@@ -184,6 +184,7 @@ mod_cleaning_date_server <- function(id, state, parent){
       # lubridate::dmy()
       # lubridate::dym()
       state$dfA_cleaned_date <- data # TODO Under development update state
+      state$state_dfA <- data
 
 
       return(data)
@@ -209,6 +210,7 @@ mod_cleaning_date_server <- function(id, state, parent){
       }
 
       state$dfB_cleaned_date <- data # TODO Under development update state
+      state$state_dfB <- data
 
       return(data)
     })
