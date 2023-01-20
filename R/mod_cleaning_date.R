@@ -229,17 +229,13 @@ mod_cleaning_date_server <- function(id, state, parent){
         lengthMenu = list(c(15, 20, 50,-1), c('default', '20', '50', 'All')),
         pageLength = 15,
         dom = 'Blfrtip',
-        buttons =
-          list(
-            "copy",
-            list(
-              extend = "collection"
-              ,
-              buttons = c("csv", "excel", "pdf")
-              ,
-              text = "Download"
-            )
-          )
+        buttons = list('copy', list(
+          extend = 'collection',
+          buttons = list(
+            list(extend = 'csv', filename = "Date formated Sample Data"),
+            list(extend = 'excel', filename = "Date formated Sample Data")),
+          text = 'Download'
+        ))
       ),
       class = 'compact hover row-border nowrap stripe'
     )
@@ -257,17 +253,13 @@ mod_cleaning_date_server <- function(id, state, parent){
         lengthMenu = list(c(15, 20, 50,-1), c('default', '20', '50', 'All')),
         pageLength = 15,
         dom = 'Blfrtip',
-        buttons =
-          list(
-            "copy",
-            list(
-              extend = "collection"
-              ,
-              buttons = c("csv", "excel", "pdf")
-              ,
-              text = "Download"
-            )
-          )
+        buttons = list('copy', list(
+          extend = 'collection',
+          buttons = list(
+            list(extend = 'csv', filename = "Date formated Matching Data"),
+            list(extend = 'excel', filename = "Date formated Matching Data")),
+          text = 'Download'
+        ))
       ),
       class = 'compact hover row-border nowrap stripe'
     )
