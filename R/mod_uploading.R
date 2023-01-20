@@ -258,15 +258,7 @@ mod_uploading_server <- function(id, state, parent){
         lengthMenu = list(c(13, 20, 50,-1), c('default', '20', '50', 'All')),
         pageLength = 13,
         dom = 'Blfrtip',
-        buttons =
-          list(
-            "copy",
-            list(
-              extend = "collection",
-              buttons = c("csv", "excel", "pdf"),
-              text = "Download"
-            )
-          )
+        buttons = list()
       ),
       class = 'compact hover row-border nowrap stripe'
     )
@@ -284,17 +276,7 @@ mod_uploading_server <- function(id, state, parent){
         lengthMenu = list(c(13, 20, 50,-1), c('default', '20', '50', 'All')),
         pageLength = 13,
         dom = 'Blfrtip',
-        buttons =
-          list(
-            "copy",
-            list(
-              extend = "collection"
-              ,
-              buttons = c("csv", "excel", "pdf")
-              ,
-              text = "Download"
-            )
-          )
+        buttons = list()
       ),
       class = 'compact hover row-border nowrap stripe'
     )
