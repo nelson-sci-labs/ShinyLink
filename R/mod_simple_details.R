@@ -15,7 +15,7 @@ mod_simple_details_ui <- function(id){
       column(12,
              box(
                width = 12,
-               title = "Union Matched Dataset",
+               title = "Linked Data",
                status = "success",
                solidHeader = FALSE,
                collapsible = FALSE,
@@ -27,7 +27,7 @@ mod_simple_details_ui <- function(id){
       column(12,
              box(
                width = 12,
-               title = "Intersect Matched Dataset",
+               title = "Confirmed Matches",
                status = "success",
                solidHeader = FALSE,
                collapsible = FALSE,
@@ -40,7 +40,7 @@ mod_simple_details_ui <- function(id){
       column(6,
              box(
                width = 12,
-               title = "Unmatched in Sample Dataset",
+               title = "Unique in Sample Data Set",
                status = "success",
                solidHeader = FALSE,
                collapsible = FALSE,
@@ -50,7 +50,7 @@ mod_simple_details_ui <- function(id){
       column(6,
              box(
                width = 12,
-               title = "Unmatched in Matching Dataset",
+               title = "Unique in Matching Data Set",
                status = "success",
                solidHeader = FALSE,
                collapsible = FALSE,
