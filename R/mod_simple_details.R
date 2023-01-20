@@ -112,7 +112,7 @@ mod_simple_details_server <- function(id, state, parent){
         lengthMenu = list(c(5, 20, 50,-1), c('default', '20', '50', 'All')),
         pageLength = 5,
         dom = 'Blfrtip',
-        buttons = list('copy', 'print', list(
+        buttons = list('copy', list(
           extend = 'collection',
           buttons = list(
             list(extend = 'csv', filename = "Linked Data"),
@@ -137,7 +137,7 @@ mod_simple_details_server <- function(id, state, parent){
         lengthMenu = list(c(5, 20, 50,-1), c('default', '20', '50', 'All')),
         pageLength = 5,
         dom = 'Blfrtip',
-        buttons = list('copy', 'print', list(
+        buttons = list('copy', list(
           extend = 'collection',
           buttons = list(
             list(extend = 'csv', filename = "Confirmed Matches"),
@@ -160,7 +160,7 @@ mod_simple_details_server <- function(id, state, parent){
         lengthMenu = list(c(5, 20, 50,-1), c('default', '20', '50', 'All')),
         pageLength = 5,
         dom = 'Blfrtip',
-        buttons = list('copy', 'print', list(
+        buttons = list('copy', list(
           extend = 'collection',
           buttons = list(
             list(extend = 'csv', filename = "Unique in Sample Data Set"),
@@ -184,7 +184,7 @@ mod_simple_details_server <- function(id, state, parent){
         lengthMenu = list(c(5, 20, 50,-1), c('default', '20', '50', 'All')),
         pageLength = 5,
         dom = 'Blfrtip',
-        buttons = list('copy', 'print', list(
+        buttons = list('copy', list(
           extend = 'collection',
           buttons = list(
             list(extend = 'csv', filename = "Unique in Matching Data Set"),
