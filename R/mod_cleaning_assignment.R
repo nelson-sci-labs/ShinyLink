@@ -344,17 +344,13 @@ mod_cleaning_assignment_server <- function(id, state, parent){
         lengthMenu = list(c(5, 20, 50,-1), c('default', '20', '50', 'All')),
         pageLength = 5,
         dom = 'Blfrtip',
-        buttons =
-          list(
-            "copy",
-            list(
-              extend = "collection"
-              ,
-              buttons = c("csv", "excel", "pdf")
-              ,
-              text = "Download"
-            )
-          )
+        buttons = list('copy', list(
+          extend = 'collection',
+          buttons = list(
+            list(extend = 'csv', filename = "Assigned Sample Data"),
+            list(extend = 'excel', filename = "Assigned Sample Data")),
+          text = 'Download'
+        ))
       ),
       class = 'compact hover row-border nowrap stripe'
     )
@@ -372,17 +368,13 @@ mod_cleaning_assignment_server <- function(id, state, parent){
         lengthMenu = list(c(5, 20, 50,-1), c('default', '20', '50', 'All')),
         pageLength = 5,
         dom = 'Blfrtip',
-        buttons =
-          list(
-            "copy",
-            list(
-              extend = "collection"
-              ,
-              buttons = c("csv", "excel", "pdf")
-              ,
-              text = "Download"
-            )
-          )
+        buttons = list('copy', list(
+          extend = 'collection',
+          buttons = list(
+            list(extend = 'csv', filename = "Assigned Matching Data"),
+            list(extend = 'excel', filename = "Assigned Matching Data")),
+          text = 'Download'
+        ))
       ),
       class = 'compact hover row-border nowrap stripe'
     )
