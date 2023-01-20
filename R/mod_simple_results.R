@@ -22,12 +22,12 @@ mod_simple_results_ui <- function(id){
         actionButton(ns("match"), "Simple Match"),
         hr(),
         br(),
-        tags$label("Selected row(s) of Matching Results table:"),
-        fluidRow(column(6, verbatimTextOutput(ns("info-main"))),
-                 column(
-                   6,
-                   downloadButton(ns("download_selected"), "Download Selected")
-                 )),
+        tags$label("Selected row(s) of Matching Results table, and the results will reflected in the next detailed page"),
+        # fluidRow(column(6, verbatimTextOutput(ns("info-main"))),
+        #          column(
+        #            6,
+        #            downloadButton(ns("download_selected"), "Download Selected")
+        #          )),
         hr(),
         tags$label("Summary of matching results:"),
         verbatimTextOutput(ns("matched-summary"))
@@ -390,17 +390,7 @@ mod_simple_results_server <- function(id, state, parent){
           lengthMenu = list(c(10, 20, 50,-1), c('default', '20', '50', 'All')),
           pageLength = 10,
           dom = 'Blfrtip',
-          buttons =
-            list(
-              "copy",
-              list(
-                extend = "collection"
-                ,
-                buttons = c("csv", "excel", "pdf")
-                ,
-                text = "Download All"
-              )
-            ),
+          buttons = list(),
           columnDefs = list(
             list(className = "selectable dt-center",
                  targets = c(0, 2:ncol(
