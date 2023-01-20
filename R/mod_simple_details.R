@@ -101,7 +101,7 @@ mod_simple_details_server <- function(id, state, parent){
     ns <- session$ns
     output[["matched_dfA"]] <- DT::renderDataTable(
       state$matched_results[['matched_union']],
-      caption = 'Data in the Sample data set',
+      caption = 'Linked Data',
       extensions = 'Buttons',
       selection = "single",
       rownames = FALSE,
@@ -112,23 +112,21 @@ mod_simple_details_server <- function(id, state, parent){
         lengthMenu = list(c(5, 20, 50,-1), c('default', '20', '50', 'All')),
         pageLength = 5,
         dom = 'Blfrtip',
-        buttons =
-          list(
-            "copy",
-            list(
-              extend = "collection"
-              ,
-              buttons = c("csv", "excel", "pdf")
-              ,
-              text = "Download"
-            )
-          )
+        buttons = list('copy', 'print', list(
+          extend = 'collection',
+          buttons = list(
+            list(extend = 'csv', filename = "Linked Data"),
+            list(extend = 'excel', filename = "Linked Data")),
+          text = 'Download'
+        ))
       ),
       class = 'compact hover row-border nowrap stripe'
     )
+
+
     output[["matched_dfB"]] <- DT::renderDataTable(
       state$matched_results[['matched_intersect']],
-      caption = 'Data in the Sample data set',
+      caption = 'Confirmed Matches',
       extensions = 'Buttons',
       selection = "single",
       rownames = FALSE,
@@ -139,23 +137,19 @@ mod_simple_details_server <- function(id, state, parent){
         lengthMenu = list(c(5, 20, 50,-1), c('default', '20', '50', 'All')),
         pageLength = 5,
         dom = 'Blfrtip',
-        buttons =
-          list(
-            "copy",
-            list(
-              extend = "collection"
-              ,
-              buttons = c("csv", "excel", "pdf")
-              ,
-              text = "Download"
-            )
-          )
+        buttons = list('copy', 'print', list(
+          extend = 'collection',
+          buttons = list(
+            list(extend = 'csv', filename = "Confirmed Matches"),
+            list(extend = 'excel', filename = "Confirmed Matches")),
+          text = 'Download'
+        ))
       ),
       class = 'compact hover row-border nowrap stripe'
     )
     output[["unmatched_dfA"]] <- DT::renderDataTable(
       state$matched_results[['dfA.unmatch']],
-      caption = 'Data in the Sample data set',
+      caption = 'Unique in Sample Data Set',
       extensions = 'Buttons',
       selection = "single",
       rownames = FALSE,
@@ -166,24 +160,20 @@ mod_simple_details_server <- function(id, state, parent){
         lengthMenu = list(c(5, 20, 50,-1), c('default', '20', '50', 'All')),
         pageLength = 5,
         dom = 'Blfrtip',
-        buttons =
-          list(
-            "copy",
-            list(
-              extend = "collection"
-              ,
-              buttons = c("csv", "excel", "pdf")
-              ,
-              text = "Download"
-            )
-          )
+        buttons = list('copy', 'print', list(
+          extend = 'collection',
+          buttons = list(
+            list(extend = 'csv', filename = "Unique in Sample Data Set"),
+            list(extend = 'excel', filename = "Unique in Sample Data Set")),
+          text = 'Download'
+        ))
       ),
       class = 'compact hover row-border nowrap stripe'
     )
 
     output[["unmatched_dfB"]] <- DT::renderDataTable(
       state$matched_results[['dfB.unmatch']],
-      caption = 'Data in the Sample data set',
+      caption = 'Unique in Matching Data Set',
       extensions = 'Buttons',
       selection = "single",
       rownames = FALSE,
@@ -194,17 +184,13 @@ mod_simple_details_server <- function(id, state, parent){
         lengthMenu = list(c(5, 20, 50,-1), c('default', '20', '50', 'All')),
         pageLength = 5,
         dom = 'Blfrtip',
-        buttons =
-          list(
-            "copy",
-            list(
-              extend = "collection"
-              ,
-              buttons = c("csv", "excel", "pdf")
-              ,
-              text = "Download"
-            )
-          )
+        buttons = list('copy', 'print', list(
+          extend = 'collection',
+          buttons = list(
+            list(extend = 'csv', filename = "Unique in Matching Data Set"),
+            list(extend = 'excel', filename = "Unique in Matching Data Set")),
+          text = 'Download'
+        ))
       ),
       class = 'compact hover row-border nowrap stripe'
     )
