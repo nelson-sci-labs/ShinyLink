@@ -1,0 +1,11 @@
+name: shinylink
+title:
+username:
+account: nelsonscilabs
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 7637775
+bundleId: 6758932
+url: https://nelsonscilabs.shinyapps.io/ShinyLink/
+when: 1674323042.45971
+lastSyncTime: 1674323042.45971
