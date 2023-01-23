@@ -317,12 +317,12 @@ mod_simple_results_server <- function(id, state, parent){
         dfA_current <-  dfA %>% dplyr::select(varnames)
         dfA_current <- dfA_current[matches.out$matches[i, ]$inds.a, ]
         dfA_current <- dfA_current %>%
-          dplyr::mutate(`Data source` = "Sample Dataset", .before = "firstname")
+          dplyr::mutate(`Data source` = "Sample Dataset", .before = colnames(dfA_current)[1])
 
         dfB_current <-  dfB %>% dplyr::select(varnames)
         dfB_current <- dfB_current[matches.out$matches[i, ]$inds.b, ]
         dfB_current <- dfB_current %>%
-          dplyr::mutate(`Data source` = "Matching Dataset", .before = "firstname")
+          dplyr::mutate(`Data source` = "Matching Dataset", .before = colnames(dfA_current)[1])
 
         subdat[[i]] <- dplyr::as_tibble(dplyr::bind_rows(dfA_current, dfB_current))
       }
