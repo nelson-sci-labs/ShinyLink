@@ -103,7 +103,7 @@ mod_simple_details_server <- function(id, state, parent){
       state$matched_results[['matched_union']],
       caption = 'Linked Data',
       extensions = 'Buttons',
-      selection = "single",
+      selection = "multiple",
       rownames = FALSE,
       server = FALSE,
       options = list(
@@ -128,7 +128,7 @@ mod_simple_details_server <- function(id, state, parent){
       state$matched_results[['matched_intersect']],
       caption = 'Confirmed Matches',
       extensions = 'Buttons',
-      selection = "single",
+      selection = "multiple",
       rownames = FALSE,
       server = FALSE,
       options = list(
@@ -151,7 +151,7 @@ mod_simple_details_server <- function(id, state, parent){
       state$matched_results[['dfA.unmatch']],
       caption = 'Unique in Sample Data Set',
       extensions = 'Buttons',
-      selection = "single",
+      selection = "multiple",
       rownames = FALSE,
       server = FALSE,
       options = list(
@@ -175,7 +175,7 @@ mod_simple_details_server <- function(id, state, parent){
       state$matched_results[['dfB.unmatch']],
       caption = 'Unique in Matching Data Set',
       extensions = 'Buttons',
-      selection = "single",
+      selection = "multiple",
       rownames = FALSE,
       server = FALSE,
       options = list(

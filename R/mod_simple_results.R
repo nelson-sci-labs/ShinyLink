@@ -18,8 +18,8 @@ mod_simple_results_ui <- function(id){
         status = "success",
         solidHeader = FALSE,
         collapsible = FALSE,
-        helpText("Identify which variables correspond to each piece of information"),
-        actionButton(ns("match"), "Simple Match"),
+        helpText("Click this button to execute matching, and your results will appear after a few seconds."),
+        actionButton(ns("match"), "Simple Match", class = "btn-success btn-lg"),
         hr(),
         br(),
         tags$label("Selected row(s) of Matching Results table, and the results will reflected in the next detailed page"),
@@ -265,120 +265,146 @@ mod_simple_results_server <- function(id, state, parent){
       dfA <- state$state_dfA
       dfB <- state$state_dfB
 
-      # matches.out <- fastLink(
+
+      # Testing only
+      # dfA <- readxl::read_excel('inst/app/www/lkselectedrecs_cleaned.xlsx')
+      # dfB <- readxl::read_excel('inst/app/www/redcapoutput_cleaned.xlsx')
+      # dfA <- readxl::read_excel('inst/app/www/Unique in Sample Data Set.xlsx')
+      # dfB <- readxl::read_excel('inst/app/www/Unique in Matching Data Set.xlsx')
+      # matches.out <- fastLink::fastLink(
       #   dfA = dfA, dfB = dfB,
-      #   varnames = c("firstname", "middlename", "lastname", "birthday", "race", "sex"),
-      #   stringdist.match = c("firstname", "middlename", "lastname", "birthday", "race", "sex"),
-      #   numeric.match =
-      #   partial.match = c("firstname", "lastname"),
-      #   n.cores = 64
+      #   varnames = c("firstname", "middlename", "lastname", "race", "sex"),
+      #   # stringdist.match = c("firstname", "middlename", "lastname", "race", "sex"),
+      #   # numeric.match =
+      #   # partial.match = c("firstname", "lastname"),
+      #   n.cores = 1
       # )
 
-      matches.out <- fastLink::fastLink(
-        dfA = dfA,
-        dfB = dfB,
-        varnames = state$matching_variables,
-        stringdist.match = state$string_matching,
-        numeric.match = state$numeric_matching,
-        partial.match = state$partial_matching,
-        n.cores = 1
-      )
+      if (length(matches.out$matches$inds.a) == 0) {
+        sendSweetAlert(
+          session = session,
+          title = "Error !",
+          text = "No matches found",
+          type = "error"
+        )
 
-      dfA.match <- dfA[matches.out$matches$inds.a, ]
-      dfA.unmatch <- dfA[-matches.out$matches$inds.a, ]
-      dfB.match <- dfB[matches.out$matches$inds.b, ]
-      dfB.unmatch <- dfB[-matches.out$matches$inds.b, ]
+      } else {
+        matches.out <- fastLink::fastLink(
+          dfA = dfA,
+          dfB = dfB,
+          varnames = state$matching_variables,
+          stringdist.match = state$string_matching,
+          numeric.match = state$numeric_matching,
+          partial.match = state$partial_matching,
+          n.cores = 1
+        )
+
+        dfA.match <- dfA[matches.out$matches$inds.a,]
+        dfA.unmatch <- dfA[-matches.out$matches$inds.a,]
+        dfB.match <- dfB[matches.out$matches$inds.b,]
+        dfB.unmatch <- dfB[-matches.out$matches$inds.b,]
 
 
-      matched_dfs <- fastLink::getMatches(
-        dfA = dfA,
-        dfB = dfB,
-        fl.out = matches.out,
-        threshold.match = 0.85
-      )
-      matched_dfs <- matched_dfs %>%
-        dplyr::select(-tidyselect::any_of(
-          c(
-            'gamma.1',
-            'gamma.2',
-            'gamma.3',
-            'gamma.4',
-            'gamma.5',
-            'gamma.6',
-            'posterior'
-          )
-        ))
+        matched_dfs <- fastLink::getMatches(
+          dfA = dfA,
+          dfB = dfB,
+          fl.out = matches.out,
+          threshold.match = 0.85
+        )
+        matched_dfs <- matched_dfs %>%
+          dplyr::select(-tidyselect::any_of(
+            c(
+              'gamma.1',
+              'gamma.2',
+              'gamma.3',
+              'gamma.4',
+              'gamma.5',
+              'gamma.6'
+              # 'posterior'
+            )
+          ))
 
-      subdat <- list()
+        subdat <- list()
 
-      varnames <- state$matching_variables
+        varnames <- state$matching_variables
 
-      for (i in 1:nrow(matches.out$matches)) {
-        dfA_current <-  dfA %>% dplyr::select(varnames)
-        dfA_current <- dfA_current[matches.out$matches[i, ]$inds.a, ]
-        dfA_current <- dfA_current %>%
-          dplyr::mutate(`Data source` = "Sample Dataset", .before = colnames(dfA_current)[1])
+        for (i in 1:nrow(matches.out$matches)) {
+          dfA_current <-  dfA %>% dplyr::select(varnames)
+          dfA_current <-
+            dfA_current[matches.out$matches[i,]$inds.a,]
+          dfA_current <- dfA_current %>%
+            dplyr::mutate(`Data source` = "Sample Dataset", .before = colnames(dfA_current)[1])
 
-        dfB_current <-  dfB %>% dplyr::select(varnames)
-        dfB_current <- dfB_current[matches.out$matches[i, ]$inds.b, ]
-        dfB_current <- dfB_current %>%
-          dplyr::mutate(`Data source` = "Matching Dataset", .before = colnames(dfA_current)[1])
+          dfB_current <-  dfB %>% dplyr::select(varnames)
+          dfB_current <-
+            dfB_current[matches.out$matches[i,]$inds.b,]
+          dfB_current <- dfB_current %>%
+            dplyr::mutate(`Data source` = "Matching Dataset", .before = colnames(dfA_current)[1])
 
-        subdat[[i]] <- dplyr::as_tibble(dplyr::bind_rows(dfA_current, dfB_current))
+          subdat[[i]] <-
+            dplyr::as_tibble(dplyr::bind_rows(dfA_current, dfB_current))
+
+          if (req("birthday" %in% colnames(subdat[[i]]))) {
+            subdat[[i]]$birthday <- as.character(subdat[[i]]$birthday)
+          }
+
+
+        }
+
+        subdats <- lapply(subdat, purrr::transpose)
+        Dat <-
+          cbind(" " = "expand", matched_dfs, details = I(subdats))
+
+
+        matched_summary <- summary(matches.out)
+
+        plot_summary <-
+          tidyr::pivot_longer(
+            matched_summary[1, 2:ncol(matched_summary)],
+            cols = 1:4,
+            names_to = "Match Type",
+            values_to = "Match Count"
+          ) %>% dplyr::mutate(`Match Count` = as.numeric(`Match Count`))
+
+        # library(ggplot2)
+        p <-
+          ggplot2::ggplot(plot_summary,
+                          ggplot2::aes(x = `Match Type`, y = `Match Count`, fill = `Match Type`)) +
+          ggplot2::geom_bar(stat = "identity") + ggplot2::theme_minimal() + ggplot2::scale_fill_manual(values =
+                                                                                                         c("#3b4992", "#ee2200", "#008b45", "#631779"))
+
+        p
+
+        sendSweetAlert(
+          session = session,
+          title = "Success!",
+          text = "Please review each match",
+          type = "success"
+        )
+
+        # for manual selection
+
+
+        matched_results <- list(
+          Dat = Dat,
+          matches.out = matches.out,
+          matched_summary = matched_summary,
+          dfA.match = dfA.match,
+          dfA.unmatch = dfA.unmatch,
+          dfB.match = dfB.match,
+          dfB.unmatch = dfB.unmatch,
+          matched_union = dplyr::bind_rows(matched_dfs, dfA.unmatch, dfB.unmatch)
+        )
+        state$matched_results <- matched_results
+        return(matched_results)
       }
-
-      subdats <- lapply(subdat, purrr::transpose)
-      Dat <- cbind(" " = "expand", matched_dfs, details = I(subdats))
-
-
-      matched_summary <- summary(matches.out)
-
-      plot_summary <-
-        tidyr::pivot_longer(
-          matched_summary[1, 2:ncol(matched_summary)],
-          cols = 1:4,
-          names_to = "Match Type",
-          values_to = "Match Count"
-        ) %>% dplyr::mutate(`Match Count` = as.numeric(`Match Count`))
-
-      # library(ggplot2)
-      p <-
-        ggplot2::ggplot(plot_summary,
-                        ggplot2::aes(x = `Match Type`, y = `Match Count`, fill = `Match Type`)) +
-        ggplot2::geom_bar(stat = "identity") + ggplot2::theme_minimal() + ggplot2::scale_fill_manual(values =
-                                                                            c("#3b4992", "#ee2200", "#008b45", "#631779"))
-
-      p
-
-      sendSweetAlert(
-        session = session,
-        title = "Success!",
-        text = "Please review each match",
-        type = "success"
-      )
-
-      # for manual selection
-
-
-      matched_results <- list(
-        Dat = Dat,
-        matches.out = matches.out,
-        matched_summary = matched_summary,
-        dfA.match = dfA.match,
-        dfA.unmatch = dfA.unmatch,
-        dfB.match = dfB.match,
-        dfB.unmatch = dfB.unmatch,
-        matched_union = dplyr::bind_rows(matched_dfs, dfA.unmatch, dfB.unmatch)
-      )
-      state$matched_results <- matched_results
-      return(matched_results)
     })
 
 
     # Output Matched ----------------------------------------------------------
     output[["matched"]] <- renderDT({
       datatable(
-        dplyr::as_tibble(matched_values()[['Dat']]),
+        dplyr::as_tibble(state$matched_results[['Dat']]),
         callback = callback,
         escape = -2,
         extensions = c("Buttons", "Select"),
@@ -493,10 +519,10 @@ mod_simple_results_server <- function(id, state, parent){
         # matches.out <- fastLink::fastLink(
         #   dfA = dfA, dfB = dfB,
         #   varnames = c("firstname", "middlename", "lastname", "race", "sex"),
-        #   stringdist.match = c("firstname", "middlename", "lastname", "race", "sex"),
+        #   # stringdist.match = c("firstname", "middlename", "lastname", "race", "sex"),
         #   # numeric.match =
-        #   partial.match = c("firstname", "lastname"),
-        #   n.cores = 64
+        #   # partial.match = c("firstname", "lastname"),
+        #   n.cores = 1
         # )
 
         dfA <- state$state_dfA
