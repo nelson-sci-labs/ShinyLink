@@ -260,11 +260,8 @@ mod_simple_results_server <- function(id, state, parent){
 
       req(state$state_dfA)
       req(state$state_dfB)
-
-      # library(magrittr)
       dfA <- state$state_dfA
       dfB <- state$state_dfB
-
 
       # Testing only
       # dfA <- readxl::read_excel('inst/app/www/lkselectedrecs_cleaned.xlsx')
@@ -280,37 +277,51 @@ mod_simple_results_server <- function(id, state, parent){
       #   n.cores = 1
       # )
 
+      matches.out <- fastLink::fastLink(
+        dfA = dfA,
+        dfB = dfB,
+        varnames = state$matching_variables,
+        stringdist.match = state$string_matching,
+        numeric.match = state$numeric_matching,
+        partial.match = state$partial_matching
+      )
+      dfA.match <- dfA[matches.out$matches$inds.a, ]
+      dfA.unmatch <- dfA[-matches.out$matches$inds.a, ]
+      dfB.match <- dfB[matches.out$matches$inds.b, ]
+      dfB.unmatch <- dfB[-matches.out$matches$inds.b, ]
+
+
+      matched_dfs <- fastLink::getMatches(
+        dfA = dfA,
+        dfB = dfB,
+        fl.out = matches.out,
+        threshold.match = 0.85
+      )
+      print(length(matches.out$matches$inds.a))
+      print(length(matches.out$matches$inds.a) == 0)
+      print(length(matches.out$matches$inds.a) != 0)
+
       if (length(matches.out$matches$inds.a) == 0) {
+        matched_results <- list(
+          Dat = NULL,
+          matches.out = NULL,
+          matched_summary = NULL,
+          dfA.match = NULL,
+          dfA.unmatch = NULL,
+          dfB.match = NULL,
+          dfB.unmatch = NULL,
+          matched_union = NULL
+        )
+        state$matched_results <- matched_results
         sendSweetAlert(
           session = session,
           title = "Error !",
           text = "No matches found",
           type = "error"
         )
+      }
 
-      } else {
-        matches.out <- fastLink::fastLink(
-          dfA = dfA,
-          dfB = dfB,
-          varnames = state$matching_variables,
-          stringdist.match = state$string_matching,
-          numeric.match = state$numeric_matching,
-          partial.match = state$partial_matching,
-          n.cores = 1
-        )
-
-        dfA.match <- dfA[matches.out$matches$inds.a,]
-        dfA.unmatch <- dfA[-matches.out$matches$inds.a,]
-        dfB.match <- dfB[matches.out$matches$inds.b,]
-        dfB.unmatch <- dfB[-matches.out$matches$inds.b,]
-
-
-        matched_dfs <- fastLink::getMatches(
-          dfA = dfA,
-          dfB = dfB,
-          fl.out = matches.out,
-          threshold.match = 0.85
-        )
+      if (length(matches.out$matches$inds.a) != 0) {
         matched_dfs <- matched_dfs %>%
           dplyr::select(-tidyselect::any_of(
             c(
@@ -344,7 +355,7 @@ mod_simple_results_server <- function(id, state, parent){
           subdat[[i]] <-
             dplyr::as_tibble(dplyr::bind_rows(dfA_current, dfB_current))
 
-          if (req("birthday" %in% colnames(subdat[[i]]))) {
+          if ("birthday" %in% colnames(subdat[[i]])) {
             subdat[[i]]$birthday <- as.character(subdat[[i]]$birthday)
           }
 
@@ -383,8 +394,6 @@ mod_simple_results_server <- function(id, state, parent){
         )
 
         # for manual selection
-
-
         matched_results <- list(
           Dat = Dat,
           matches.out = matches.out,
@@ -400,11 +409,11 @@ mod_simple_results_server <- function(id, state, parent){
       }
     })
 
-
+    # if (length(state$matched_results[['matches.out']]$matches$inds.a) != 0)
     # Output Matched ----------------------------------------------------------
     output[["matched"]] <- renderDT({
       datatable(
-        dplyr::as_tibble(state$matched_results[['Dat']]),
+        dplyr::as_tibble(matched_values()[['Dat']]),
         callback = callback,
         escape = -2,
         extensions = c("Buttons", "Select"),
@@ -468,22 +477,29 @@ mod_simple_results_server <- function(id, state, parent){
       p
     })
 
+
+
+
     output[["plot-venn"]] <- renderPlot({
+      if (length(state$matched_results[['matches.out']]$matches$inds.a) != 0) {
+        n_dfA.unmatch <- nrow(matched_values()[['dfA.unmatch']])
+        n_dfB.unmatch <- nrow(matched_values()[['dfB.unmatch']])
+        n_match <- nrow(matched_values()[['Dat']])
+        library("ggvenn") # Has to be removed for CRAN version
+        # Warning: Error in inner_join: could not find function "inner_join"
 
-      n_dfA.unmatch <- nrow(matched_values()[['dfA.unmatch']])
-      n_dfB.unmatch <- nrow(matched_values()[['dfB.unmatch']])
-      n_match <- nrow(matched_values()[['Dat']])
-      library("ggvenn") # Has to be removed for cran version
-      # Warning: Error in inner_join: could not find function "inner_join"
-
-      x <- list(
-        Sample = c((1:n_dfA.unmatch)+3e9, 1:n_match),
-        Matching = c(-(1:n_dfB.unmatch) + 5e7, 1:n_match)
-      )
-      names(x) <- c("Sample Dataset", "Matching Dataset")
-      ggvenn::ggvenn(x)
-
+        x <- list(Sample = c((1:n_dfA.unmatch) + 3e9, 1:n_match),
+                  Matching = c(-(1:n_dfB.unmatch) + 5e7, 1:n_match))
+        if (length(names(x)) == 2) {
+          names(x) <- c("Sample Dataset", "Matching Dataset")
+        }
+        ggvenn::ggvenn(x)
+      }
     })
+
+
+
+
 
 
 
@@ -502,7 +518,6 @@ mod_simple_results_server <- function(id, state, parent){
     # Update matched results based on selection -------------------------------
 
     observe({
-
       if (!is.null(input[["matched_rows_selected"]])) {
         matched_rows_selected <- input[["matched_rows_selected"]] + 1
 
