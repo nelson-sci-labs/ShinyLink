@@ -285,25 +285,14 @@ mod_simple_results_server <- function(id, state, parent){
         numeric.match = state$numeric_matching,
         partial.match = state$partial_matching
       )
-      dfA.match <- dfA[matches.out$matches$inds.a, ]
-      dfA.unmatch <- dfA[-matches.out$matches$inds.a, ]
-      dfB.match <- dfB[matches.out$matches$inds.b, ]
-      dfB.unmatch <- dfB[-matches.out$matches$inds.b, ]
 
-
-      matched_dfs <- fastLink::getMatches(
-        dfA = dfA,
-        dfB = dfB,
-        fl.out = matches.out,
-        threshold.match = 0.85
-      )
       print(length(matches.out$matches$inds.a))
       print(length(matches.out$matches$inds.a) == 0)
       print(length(matches.out$matches$inds.a) != 0)
 
       if (length(matches.out$matches$inds.a) == 0) {
         matched_results <- list(
-          Dat = NULL,
+          Dat = tibble::tibble(),
           matches.out = NULL,
           matched_summary = NULL,
           dfA.match = NULL,
@@ -322,6 +311,19 @@ mod_simple_results_server <- function(id, state, parent){
       }
 
       if (length(matches.out$matches$inds.a) != 0) {
+
+        dfA.match <- dfA[matches.out$matches$inds.a, ]
+        dfA.unmatch <- dfA[-matches.out$matches$inds.a, ]
+        dfB.match <- dfB[matches.out$matches$inds.b, ]
+        dfB.unmatch <- dfB[-matches.out$matches$inds.b, ]
+
+
+        matched_dfs <- fastLink::getMatches(
+          dfA = dfA,
+          dfB = dfB,
+          fl.out = matches.out,
+          threshold.match = 0.85
+        )
         matched_dfs <- matched_dfs %>%
           dplyr::select(-tidyselect::any_of(
             c(
@@ -411,9 +413,14 @@ mod_simple_results_server <- function(id, state, parent){
 
     # if (length(state$matched_results[['matches.out']]$matches$inds.a) != 0)
     # Output Matched ----------------------------------------------------------
+
+    Dat <- reactive({
+        dplyr::as_tibble(matched_values()[['Dat']])
+    })
+
     output[["matched"]] <- renderDT({
-      datatable(
-        dplyr::as_tibble(matched_values()[['Dat']]),
+        datatable(
+        Dat(),
         callback = callback,
         escape = -2,
         extensions = c("Buttons", "Select"),
@@ -443,7 +450,6 @@ mod_simple_results_server <- function(id, state, parent){
           )
         ),
         class = 'compact hover row-border nowrap stripe'
-
       )
     }, server = FALSE)
 
@@ -473,7 +479,6 @@ mod_simple_results_server <- function(id, state, parent){
                         ggplot2::aes(x = `Match Type`, y = `Match Count`, fill = `Match Type`)) +
         ggplot2::geom_bar(stat = "identity") + ggplot2::theme_minimal() + ggplot2::scale_fill_manual(values =
                                                                             c("#3b4992", "#ee2200", "#008b45", "#631779"))
-
       p
     })
 
