@@ -19,10 +19,10 @@ mod_simple_results_ui <- function(id){
         solidHeader = FALSE,
         collapsible = FALSE,
         helpText("Click this button to execute matching, and your results will appear after a few seconds."),
-        actionButton(ns("match"), "Simple Match", class = "btn-success btn-lg"),
-        hr(),
-        br(),
-        tags$label("Selected row(s) of Matching Results table, and the results will reflected in the next detailed page"),
+        actionButton(ns("match"), "Simple Match", class = "btn-success"),
+        # hr(),
+        # br(),
+        # tags$label("Selected row(s) of Matching Results table, and the results will reflected in the next detailed page"),
         # fluidRow(column(6, verbatimTextOutput(ns("info-main"))),
         #          column(
         #            6,
@@ -50,6 +50,7 @@ mod_simple_results_ui <- function(id){
       status = "success",
       solidHeader = FALSE,
       collapsible = FALSE,
+      tags$label("Selected row(s) of Matching Results table, and the results will be reflected in the Matching Details page"),
       column(12, DT::dataTableOutput(ns('matched')))
     ),
     fluidRow(
@@ -304,9 +305,9 @@ mod_simple_results_server <- function(id, state, parent){
         state$matched_results <- matched_results
         sendSweetAlert(
           session = session,
-          title = "Error !",
+          title = "",
           text = "No matches found",
-          type = "error"
+          type = "warning"
         )
       }
 
@@ -482,9 +483,6 @@ mod_simple_results_server <- function(id, state, parent){
       p
     })
 
-
-
-
     output[["plot-venn"]] <- renderPlot({
       if (length(state$matched_results[['matches.out']]$matches$inds.a) != 0) {
         n_dfA.unmatch <- nrow(matched_values()[['dfA.unmatch']])
@@ -502,12 +500,6 @@ mod_simple_results_server <- function(id, state, parent){
       }
     })
 
-
-
-
-
-
-
     # Download selected rows --------------------------------------------------
 
     output$download_selected <- downloadHandler(
@@ -518,7 +510,6 @@ mod_simple_results_server <- function(id, state, parent){
         write.csv(matched_values()[['Dat']][input[["matched_rows_selected"]] + 1, ], file)
       }
     )
-
 
     # Update matched results based on selection -------------------------------
 
