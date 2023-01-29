@@ -95,6 +95,11 @@ mod_uploading_ui <- function(id){
             )
           )
         ),
+
+        # Variables
+        # Entries
+        # Missing values
+        # Duplicate rows
         column(
           width = 3,
           descriptionBlock(

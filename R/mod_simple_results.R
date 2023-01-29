@@ -14,6 +14,7 @@ mod_simple_results_ui <- function(id){
       6,
       box(
         width = 12,
+        height = '20em',
         title = "Start Simple Matching",
         status = "success",
         solidHeader = FALSE,
@@ -37,6 +38,7 @@ mod_simple_results_ui <- function(id){
       6,
       box(
         width = 12,
+        height = '20em',
         title = "Matching Summary",
         status = "success",
         solidHeader = FALSE,
