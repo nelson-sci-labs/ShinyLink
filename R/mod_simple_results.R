@@ -43,7 +43,7 @@ mod_simple_results_ui <- function(id){
         status = "success",
         solidHeader = FALSE,
         collapsible = FALSE,
-        plotOutput(ns("plot-venn"))
+        plotOutput(ns("plot-venn"), height = "268px")
       )
     )),
     box(

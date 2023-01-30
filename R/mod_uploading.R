@@ -11,13 +11,13 @@ mod_uploading_ui <- function(id){
   ns <- NS(id)
   tagList(
     box(
-      width = 12,
+      width = 6,
       title = "Inputs",
       status = "success",
       solidHeader = FALSE,
       fluidRow(
         column(
-          width = 3,
+          width = 6,
           fileInput(
             inputId = ns("file_path_dfA"),
             label = "Select Sample data set",
@@ -51,7 +51,7 @@ mod_uploading_ui <- function(id){
           HTML("<p><i>Supported formats: Excel, csv, tsv, SAS, SPSS, Stata.</i></p>")
         ),
         column(
-          width = 3,
+          width = 6,
           fluidRow(
             HTML("<h5><b>Download our demo data</b></h5>"),
             HTML("<h5>Sample data</h5>"),
@@ -94,58 +94,17 @@ mod_uploading_ui <- function(id){
               "<p><i>Optimized for 1980 x 1080 resolution screen (1080p) and Google Chrome Web Browser Version 106.0.5249.119.</i></p>"
             )
           )
-        ),
-
-        # Variables
-        # Entries
-        # Missing values
-        # Duplicate rows
-        column(
-          width = 3,
-          descriptionBlock(
-            number = "17%",
-            numberColor = "green",
-            numberIcon = icon("caret-up"),
-            header = "168",
-            text = "Total Entries",
-            rightBorder = TRUE,
-            marginBottom = TRUE
-          ),
-          descriptionBlock(
-            number = "58%",
-            numberColor = "red",
-            numberIcon = icon("caret-down"),
-            header = "42",
-            text = "Percent of Differences",
-            rightBorder = TRUE,
-            marginBottom = FALSE
-          )
-        ),
-        column(
-          width = 3,
-          boxPad(
-            color = "green",
-            descriptionBlock(
-              header = "85",
-              text = "Unique Source IDs",
-              rightBorder = FALSE,
-              marginBottom = TRUE
-            ),
-            descriptionBlock(
-              header = "73",
-              text = "Unique Matching IDs",
-              rightBorder = FALSE,
-              marginBottom = TRUE
-            ),
-            descriptionBlock(
-              header = "35%",
-              text = "Percentage Matching",
-              rightBorder = FALSE,
-              marginBottom = FALSE
-            )
-          )
         )
+
       )
+    ),
+    box(
+      width = 6,
+      title = "Summary Statistics",
+      status = "success",
+      solidHeader = FALSE,
+      plotOutput(ns("plot-upload"), height = "248px")
+
     ),
     fluidRow(column(
       width = 6,
@@ -249,6 +208,55 @@ mod_uploading_server <- function(id, state, parent){
       state$dfB_uploaded <- dfB
       return(dfB)
     })
+
+    output[["plot-upload"]] <- renderPlot({
+      # Testing only
+      # dfA <- readxl::read_excel('inst/app/www/lkselectedrecs.xlsx')
+      # dfB <- readxl::read_excel('inst/app/www/redcapoutput.xlsx')
+      dfA <- dfA()
+      dfB <- dfB()
+
+      library(ggplot2)
+      library("ggsci")
+
+      # Create data
+      data <- tibble::tibble(
+        Value = c(
+          ncol(dfA),
+          nrow(dfA),
+          sum(duplicated(dfA) == TRUE),
+          ncol(dfB),
+          nrow(dfB),
+          sum(duplicated(dfB) == TRUE)
+        )
+      )
+
+      data$name <- factor(
+        c(
+          "Variables",
+          "Entries",
+          "Duplicates",
+          "Variables",
+          "Entries",
+          "Duplicates"
+        ),
+        levels = c("Entries", "Variables", "Duplicates")
+      )
+      data$Group <-
+        factor(c(rep("Sample Data Set", 3), rep("Matching Data Set", 3)),
+               levels = c("Sample Data Set", "Matching Data Set"))
+
+      # Barplot
+      p <- ggplot(data, aes(x=name, y=Value, fill=Group)) +
+        geom_bar(position="dodge", stat="identity") +
+        geom_text(aes(label=Value), vjust=1.6, color="white",
+                  position = position_dodge(0.9), size=3.5)+
+        theme_classic() +
+        xlab("") + ylab("Counts") +
+        scale_fill_manual(values = cbp1 <- c( "#7eb7e8","#addc91"))
+      p
+    }, res = 120)
+
 
     output$upload_dfA <- DT::renderDataTable(
       dfA(),
