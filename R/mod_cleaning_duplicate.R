@@ -183,6 +183,27 @@ mod_cleaning_duplicate_server <- function(id, state, parent){
       class = 'compact hover row-border nowrap stripe'
     )
 
+    # Notification
+    observeEvent(input$duplicate_switchA, {
+      req(state$dfA_uploaded)
+      if (input$duplicate_switchA == TRUE) {
+        showNotification(paste(
+        sum(duplicated(state$dfA_uploaded) == TRUE),
+        "duplicated entries were removed in the Matching Data Set"),
+        type = "message")
+      }
+    }, ignoreInit = TRUE)
+    observeEvent(input$duplicate_switchB, {
+      req(state$dfB_uploaded)
+      if (input$duplicate_switchB == TRUE) {
+        showNotification(paste(
+        sum(duplicated(state$dfB_uploaded) == TRUE),
+        "duplicated entries were removed in the Matching Data Set"),
+        type = "message")
+      }
+    }, ignoreInit = TRUE)
+
+
     # Previous page button redirection
     observeEvent(input$previous_upload, {
       updateTabItems(session = parent, "tabs", "upload")

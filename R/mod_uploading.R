@@ -166,6 +166,7 @@ mod_uploading_ui <- function(id){
 #' uploading Server Functions
 #'
 #' @importFrom shinydashboard updateTabItems
+#' @import ggpubr ggplot2 ggsci scales
 #'
 #' @noRd
 
@@ -211,13 +212,13 @@ mod_uploading_server <- function(id, state, parent){
 
     output[["plot-upload"]] <- renderPlot({
       # Testing only
-      # dfA <- readxl::read_excel('inst/app/www/lkselectedrecs.xlsx')
+      # dfA <- readxl::read_excel('inst/app/www/lkselectedrecs_cleaned.xlsx')
       # dfB <- readxl::read_excel('inst/app/www/redcapoutput.xlsx')
       dfA <- dfA()
       dfB <- dfB()
 
       library(ggplot2)
-      library("ggsci")
+      # library("ggsci")
 
       # Create data
       data <- tibble::tibble(
@@ -243,8 +244,8 @@ mod_uploading_server <- function(id, state, parent){
         levels = c("Entries", "Variables", "Duplicates")
       )
       data$Group <-
-        factor(c(rep("Sample Data Set", 3), rep("Matching Data Set", 3)),
-               levels = c("Sample Data Set", "Matching Data Set"))
+        factor(c(rep("Sample Data", 3), rep("Matching Data", 3)),
+               levels = c("Sample Data", "Matching Data"))
 
       # Barplot
       p <- ggplot(data, aes(x=name, y=Value, fill=Group)) +
@@ -253,8 +254,51 @@ mod_uploading_server <- function(id, state, parent){
                   position = position_dodge(0.9), size=3.5)+
         theme_classic() +
         xlab("") + ylab("Counts") +
-        scale_fill_manual(values = cbp1 <- c( "#7eb7e8","#addc91"))
+        scale_fill_manual(values = c( "#7eb7e8","#addc91"))
       p
+      data1 <- data %>% dplyr::filter(name == "Entries")
+      p1 <- ggplot(data1, aes(x=name, y=Value, fill=Group)) +
+        geom_bar(position="dodge", stat="identity") +
+        geom_text(aes(label=Value), vjust=1.6, color="white",
+                  position = position_dodge(0.9), size=3.5)+
+        theme_classic() +
+        xlab("") + ylab("Counts") + scale_y_continuous(labels = scales::label_number(accuracy = 1)) +
+        scale_fill_manual(values = c( "#7eb7e8","#addc91"))
+      p1
+      data2 <- data %>% dplyr::filter(name == "Variables")
+      p2 <- ggplot(data2, aes(x=name, y=Value, fill=Group)) +
+        geom_bar(position="dodge", stat="identity") +
+        geom_text(aes(label=Value), vjust=1.6, color="white",
+                  position = position_dodge(0.9), size=3.5)+
+        theme_classic() +
+        xlab("") + ylab("") + scale_y_continuous(labels = scales::label_number(accuracy = 1)) +
+        scale_fill_manual(values = c( "#7eb7e8","#addc91"))
+      p2
+      data3 <- data %>% dplyr::filter(name == "Duplicates")
+
+      if (sum(data3$Value) == 0) {
+        p3 <- ggplot(data3, aes(x=name, y=Value, fill=Group)) +
+          geom_bar(position="dodge", stat="identity") +
+          geom_text(aes(label=Value), vjust=1.6, color="white",
+                    position = position_dodge(0.9), size=3.5)+
+          theme_classic() + ylim(0, 100) +
+          xlab("") + ylab("")  +
+          scale_fill_manual(values = c( "#7eb7e8","#addc91"))
+        p3
+      } else {
+        p3 <- ggplot(data3, aes(x=name, y=Value, fill=Group)) +
+        geom_bar(position="dodge", stat="identity") +
+        geom_text(aes(label=Value), vjust=1.6, color="white",
+                  position = position_dodge(0.9), size=3.5)+
+        theme_classic() +
+        xlab("") + ylab("") + scale_y_continuous(labels = scales::label_number(accuracy = 1)) +
+        scale_fill_manual(values = c( "#7eb7e8","#addc91"))
+        p3
+      }
+
+      ggpubr::ggarrange(p1, p2, p3, ncol=3, nrow=1, common.legend = TRUE, legend="right")
+
+
     }, res = 120)
 
 
