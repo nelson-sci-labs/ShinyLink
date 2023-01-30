@@ -166,7 +166,7 @@ mod_uploading_ui <- function(id){
 #' uploading Server Functions
 #'
 #' @importFrom shinydashboard updateTabItems
-#' @import ggpubr ggplot2 ggsci scales
+#' @import ggpubr ggplot2 scales
 #'
 #' @noRd
 
@@ -218,7 +218,6 @@ mod_uploading_server <- function(id, state, parent){
       dfB <- dfB()
 
       library(ggplot2)
-      # library("ggsci")
 
       # Create data
       data <- tibble::tibble(
