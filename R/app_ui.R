@@ -2,12 +2,12 @@
 #'
 #' @param request Internal parameter for `{shiny}`.
 #'     DO NOT REMOVE.
-#' @import shiny
+#' @import shiny waiter
 #' @importFrom shinyWidgets prettyToggle prettySwitch prettyCheckboxGroup
 #' @importFrom shinyWidgets actionBttn switchInput awesomeRadio materialSwitch
 #' @importFrom shinyWidgets prettyRadioButtons sliderTextInput checkboxGroupButtons chooseSliderSkin
 #' @importFrom shinydashboard dropdownMenu sidebarMenu menuItem menuSubItem dashboardBody tabItems tabItem
-#' @importFrom shinydashboardPlus dashboardPage dashboardSidebar box dashboardHeader taskItem dropdownBlock descriptionBlock boxPad dashboardFooter dashboardControlbar
+#' @importFrom shinydashboardPlus dashboardPage dashboardSidebar box dashboardHeader taskItem dropdownBlock descriptionBlock boxPad dashboardFooter dashboardControlbar skinSelector
 #'
 #' @noRd
 app_ui <- function(request) {
@@ -16,12 +16,15 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # List the first level UI elements here
     dashboardPage(
+      preloader = list(html = tagList(spin_1(), "Loading ..."), color = "#3c8dbc"),
       options = list(sidebarExpandOnHover = TRUE),
-      controlbar = dashboardControlbar(),
+      # controlbar = dashboardControlbar(),
+      controlbar = dashboardControlbar(collapsed = TRUE, skinSelector()),
+
       title = "ShinyLink",
       # Header -----------------------------------------------------------------
       header = dashboardHeader(
-        title = "ShinyLink Ver 0.3.2",
+        title = "ShinyLink Ver 0.3.3",
         leftUi = tagList(
           dropdownBlock(
             id = "mydropdown",
