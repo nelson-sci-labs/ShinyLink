@@ -43,7 +43,9 @@ mod_advanced_parameters_ui <- function(id) {
           numericInput(
             ns("tol_em"),
             p("Convergence tolerance for the EM algorithm"),
-            value = 1e-04
+            value = 1e-04,
+            min = 1e-04,
+            max = 1
           ),
           fluidRow(
             column(
@@ -54,15 +56,15 @@ mod_advanced_parameters_ui <- function(id) {
                 status = "danger",
                 value = TRUE
               )
-            ),
-            column(
-              width = 6,
-              materialSwitch(
-                inputId = ns("linprog_dedupe"),
-                label = "linprog.dedupe",
-                status = "danger"
-              )
             )
+            # column(
+            #   width = 6,
+            #   materialSwitch(
+            #     inputId = ns("linprog_dedupe"),
+            #     label = "linprog.dedupe",
+            #     status = "danger"
+            #   )
+            # )
           )
         ),
         style = "margin-left: 0px;",
@@ -532,7 +534,7 @@ mod_advanced_parameters_server <- function(id, state, session) {
         x <- list(Sample = c((1:n_dfA.unmatch) + 3e9, 1:n_match),
                   Matching = c(-(1:n_dfB.unmatch) + 5e7, 1:n_match))
         if (length(names(x)) == 2) {
-          names(x) <- c("Sample Dataset", "Matching Dataset")
+          names(x) <- c("Sample Data", "Matching Data")
         }
         ggvenn::ggvenn(x)
       }

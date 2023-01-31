@@ -21,7 +21,7 @@ app_ui <- function(request) {
       title = "ShinyLink",
       # Header -----------------------------------------------------------------
       header = dashboardHeader(
-        title = "ShinyLink Ver 0.3.1",
+        title = "ShinyLink Ver 0.3.2",
         leftUi = tagList(
           dropdownBlock(
             id = "mydropdown",

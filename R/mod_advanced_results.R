@@ -437,7 +437,9 @@ mod_advanced_results_server <- function(id, state, session){
         Sample = c((1:n_dfA.unmatch)+3e9, 1:n_match),
         Matching = c(-(1:n_dfB.unmatch) + 5e7, 1:n_match)
       )
-      names(x) <- c("Sample Dataset", "Matching Dataset")
+      if (length(names(x)) == 2) {
+        names(x) <- c("Sample Data", "Matching Data")
+      }
       ggvenn::ggvenn(x)
     })
     # Download selected rows --------------------------------------------------

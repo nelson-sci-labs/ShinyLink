@@ -496,7 +496,7 @@ mod_simple_results_server <- function(id, state, parent){
         x <- list(Sample = c((1:n_dfA.unmatch) + 3e9, 1:n_match),
                   Matching = c(-(1:n_dfB.unmatch) + 5e7, 1:n_match))
         if (length(names(x)) == 2) {
-          names(x) <- c("Sample Dataset", "Matching Dataset")
+          names(x) <- c("Sample Data", "Matching Data")
         }
         ggvenn::ggvenn(x)
       }
