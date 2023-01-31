@@ -253,7 +253,7 @@ mod_uploading_server <- function(id, state, parent){
                   position = position_dodge(0.9), size=3.5)+
         theme_classic() +
         xlab("") + ylab("Counts") +
-        scale_fill_manual(values = c( "#7eb7e8","#addc91"))
+        ggplot2::scale_fill_manual(values = c( "#7eb7e8","#addc91"))
       p
 
       data1 <- data %>% dplyr::filter(name == "Entries")
@@ -263,7 +263,7 @@ mod_uploading_server <- function(id, state, parent){
                   position = position_dodge(0.9), size=3.5)+
         theme_classic() +
         xlab("") + ylab("Counts") + scale_y_continuous(labels = scales::label_number(accuracy = 1)) +
-        scale_fill_manual(values = c( "#7eb7e8","#addc91"))
+        ggplot2::scale_fill_manual(values = c( "#7eb7e8","#addc91"))
       p1
 
       data2 <- data %>% dplyr::filter(name == "Variables")
@@ -273,7 +273,7 @@ mod_uploading_server <- function(id, state, parent){
                   position = position_dodge(0.9), size=3.5)+
         theme_classic() +
         xlab("") + ylab("") + scale_y_continuous(labels = scales::label_number(accuracy = 1)) +
-        scale_fill_manual(values = c( "#7eb7e8","#addc91"))
+        ggplot2::scale_fill_manual(values = c( "#7eb7e8","#addc91"))
       p2
 
       data3 <- data %>% dplyr::filter(name == "Duplicates")
@@ -284,7 +284,7 @@ mod_uploading_server <- function(id, state, parent){
                     position = position_dodge(0.9), size=3.5)+
           theme_classic() + ylim(0, 100) +
           xlab("") + ylab("")  +
-          scale_fill_manual(values = c( "#7eb7e8","#addc91"))
+          ggplot2::scale_fill_manual(values = c( "#7eb7e8","#addc91"))
         p3
       } else {
         p3 <- ggplot(data3, aes(x=name, y=Value, fill=Group)) +
@@ -293,7 +293,7 @@ mod_uploading_server <- function(id, state, parent){
                   position = position_dodge(0.9), size=3.5)+
         theme_classic() +
         xlab("") + ylab("") + scale_y_continuous(labels = scales::label_number(accuracy = 1)) +
-        scale_fill_manual(values = c( "#7eb7e8","#addc91"))
+        ggplot2::scale_fill_manual(values = c( "#7eb7e8","#addc91"))
         p3
       }
 

@@ -324,7 +324,7 @@ mod_advanced_parameters_server <- function(id, state, session) {
 
         # estimate.only = state$estimate_only, # Not applicable
         dedupe.matches = state$dedupe_matches,
-        linprog.dedupe = state$linprog_dedupe,
+        # linprog.dedupe = state$linprog_dedupe,
 
         n.cores = state$n_cores,
         tol.em = state$tol_em
@@ -357,7 +357,6 @@ mod_advanced_parameters_server <- function(id, state, session) {
         dfA.unmatch <- dfA[-matches.out$matches$inds.a, ]
         dfB.match <- dfB[matches.out$matches$inds.b, ]
         dfB.unmatch <- dfB[-matches.out$matches$inds.b, ]
-
 
         matched_dfs <- fastLink::getMatches(
           dfA = dfA,
