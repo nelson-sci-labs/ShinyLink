@@ -10,7 +10,7 @@
 #' @return No return value, called for launch the application.
 run_app <- function(
   onStart = NULL,
-  options = list(),
+  options = list("launch.browser"),
   enableBookmarking = NULL,
   uiPattern = "/",
   ...

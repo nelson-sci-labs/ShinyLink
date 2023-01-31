@@ -39,7 +39,7 @@ mod_advanced_parameters_ui <- function(id) {
           width = 6,
           numericInput(ns("n_cores"),
                        p("The number of cores to parallelize"),
-                       value = 1),
+                       value = 1, min = 1),
           numericInput(
             ns("tol_em"),
             p("Convergence tolerance for the EM algorithm"),
