@@ -50,6 +50,8 @@ usethis::use_package("fastLink", min_version = TRUE)
 usethis::use_package("gender", min_version = TRUE)
 usethis::use_package("ggplot2", min_version = TRUE)
 usethis::use_package("ggvenn", min_version = TRUE)
+usethis::use_package("ggpubr")
+
 usethis::use_package("haven", min_version = TRUE)
 usethis::use_package("htmlwidgets", min_version = TRUE)
 usethis::use_package("jsonlite", min_version = TRUE)

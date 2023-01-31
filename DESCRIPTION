@@ -1,6 +1,6 @@
 Package: ShinyLink
 Title: 'Shiny' Based Record Linkage Tool
-Version: 0.3.0
+Version: 0.3.1
 Authors@R: c(
     person("Shufu", "Chen", role = c("aut"), email = "shufuchen@nelsonscilabs.com"),       
     person("John", "Tyburski", role = c("aut"), email = "jtyburski@nelsonscilabs.com"),
@@ -12,7 +12,7 @@ SystemRequirements: C++11
 License: GPL-3
 Imports: 
     config (>= 0.3.1),
-    DT (>= 0.25), 
+    DT (>= 0.25),
     dplyr,
     fastLink,
     gender,
@@ -31,7 +31,8 @@ Imports:
     shinyWidgets,
     tidyr,
     tidyselect,
-    vroom
+    vroom,
+    ggpubr
 Suggests: 
     pkgload,
     knitr,
