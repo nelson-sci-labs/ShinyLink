@@ -65,7 +65,7 @@ app_server <- function(input, output, session) {
   mod_simple_results_server("simple_results", app_state, session)
   mod_simple_details_server("simple_details", app_state, session)
   mod_advanced_parameters_server("advanced_parameters", app_state, session)
-  mod_advanced_results_server("advanced_results", app_state, session)
+  # mod_advanced_results_server("advanced_results", app_state, session)
   mod_advanced_details_server("advanced_details", app_state, session)
 
 

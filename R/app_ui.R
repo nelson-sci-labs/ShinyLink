@@ -21,7 +21,7 @@ app_ui <- function(request) {
       title = "ShinyLink",
       # Header -----------------------------------------------------------------
       header = dashboardHeader(
-        title = "ShinyLink Ver 0.2.7",
+        title = "ShinyLink Ver 0.3.0",
         leftUi = tagList(
           dropdownBlock(
             id = "mydropdown",
@@ -142,20 +142,21 @@ app_ui <- function(request) {
               icon = icon("sliders")
             ),
             menuSubItem(
-              "Impute Missing Gender ",
-              tabName = "imputation",
-              icon = icon("circle-question")
-            ),
-            menuSubItem(
-              "Matching Results",
-              tabName = "advanced_results",
-              icon = icon("hard-drive")
-            ),
-            menuSubItem(
               "Matching Details",
               tabName = "advanced_details",
               icon = icon("download")
+            ),
+            menuSubItem(
+              "Impute Missing Gender ",
+              tabName = "imputation",
+              icon = icon("circle-question")
             )
+            # menuSubItem(
+            #   "Matching Results",
+            #   tabName = "advanced_results",
+            #   icon = icon("hard-drive")
+            # ),
+
           )
         )
         # mod_sidebar_ui("mod_sidebar") # Not as a sidebar module for now
@@ -175,8 +176,6 @@ app_ui <- function(request) {
                   mod_cleaning_gender_ui("cleaning_gender")),
           tabItem(tabName = "date_format",
                   mod_cleaning_date_ui("cleaning_date")),
-          tabItem(tabName = "imputation",
-                  mod_cleaning_imputation_ui("cleaning_imputation")),
           tabItem(tabName = "simple_settings",
                   mod_simple_settings_ui("simple_settings")),
           tabItem(tabName = "simple_results",
@@ -185,11 +184,12 @@ app_ui <- function(request) {
                   mod_simple_details_ui("simple_details")),
           tabItem(tabName = "advanced_parameters",
                   mod_advanced_parameters_ui("advanced_parameters")),
-          tabItem(tabName = "advanced_results",
-                  mod_advanced_results_ui("advanced_results")),
+          # tabItem(tabName = "advanced_results",
+          #         mod_advanced_results_ui("advanced_results")),
           tabItem(tabName = "advanced_details",
-                  mod_advanced_details_ui("advanced_details"))
-
+                  mod_advanced_details_ui("advanced_details")),
+          tabItem(tabName = "imputation",
+                  mod_cleaning_imputation_ui("cleaning_imputation"))
       )),
 
       # Footer -----------------------------------------------------------------
@@ -213,7 +213,7 @@ golem_add_external_resources <- function() {
 
   tags$head(favicon(),
             bundle_resources(path = app_sys("app/www"),
-                             app_title = "shinylink")
+                             app_title = "ShinyLink - Record Linkage ")
             # Add here other external resources
             # for example, you can add
             # shinyalert::useShinyalert()

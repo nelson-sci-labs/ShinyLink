@@ -255,6 +255,7 @@ mod_uploading_server <- function(id, state, parent){
         xlab("") + ylab("Counts") +
         scale_fill_manual(values = c( "#7eb7e8","#addc91"))
       p
+
       data1 <- data %>% dplyr::filter(name == "Entries")
       p1 <- ggplot(data1, aes(x=name, y=Value, fill=Group)) +
         geom_bar(position="dodge", stat="identity") +
@@ -264,6 +265,7 @@ mod_uploading_server <- function(id, state, parent){
         xlab("") + ylab("Counts") + scale_y_continuous(labels = scales::label_number(accuracy = 1)) +
         scale_fill_manual(values = c( "#7eb7e8","#addc91"))
       p1
+
       data2 <- data %>% dplyr::filter(name == "Variables")
       p2 <- ggplot(data2, aes(x=name, y=Value, fill=Group)) +
         geom_bar(position="dodge", stat="identity") +
@@ -273,8 +275,8 @@ mod_uploading_server <- function(id, state, parent){
         xlab("") + ylab("") + scale_y_continuous(labels = scales::label_number(accuracy = 1)) +
         scale_fill_manual(values = c( "#7eb7e8","#addc91"))
       p2
-      data3 <- data %>% dplyr::filter(name == "Duplicates")
 
+      data3 <- data %>% dplyr::filter(name == "Duplicates")
       if (sum(data3$Value) == 0) {
         p3 <- ggplot(data3, aes(x=name, y=Value, fill=Group)) +
           geom_bar(position="dodge", stat="identity") +
