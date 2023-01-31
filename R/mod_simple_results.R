@@ -374,23 +374,6 @@ mod_simple_results_server <- function(id, state, parent){
 
         matched_summary <- summary(matches.out)
 
-        plot_summary <-
-          tidyr::pivot_longer(
-            matched_summary[1, 2:ncol(matched_summary)],
-            cols = 1:4,
-            names_to = "Match Type",
-            values_to = "Match Count"
-          ) %>% dplyr::mutate(`Match Count` = as.numeric(`Match Count`))
-
-        # library(ggplot2)
-        p <-
-          ggplot2::ggplot(plot_summary,
-                          ggplot2::aes(x = `Match Type`, y = `Match Count`, fill = `Match Type`)) +
-          ggplot2::geom_bar(stat = "identity") + ggplot2::theme_minimal() + ggplot2::scale_fill_manual(values =
-                                                                                                         c("#3b4992", "#ee2200", "#008b45", "#631779"))
-
-        p
-
         sendSweetAlert(
           session = session,
           title = "Success!",
@@ -481,7 +464,7 @@ mod_simple_results_server <- function(id, state, parent){
         if (length(names(x)) == 2) {
           names(x) <- c("Sample Data", "Matching Data")
         }
-        ggvenn::ggvenn(x)
+        ggvenn::ggvenn(x, fill_color = c("#3b4992", "#008b45"))
       }
     })
 
@@ -503,7 +486,8 @@ mod_simple_results_server <- function(id, state, parent){
         matched_rows_selected <- input[["matched_rows_selected"]] + 1
 
         state$matched_results[['matched_intersect']] <-
-          matched_values()[['Dat']][matched_rows_selected, ]
+          matched_values()[['Dat']][matched_rows_selected, ] %>%
+          dplyr::select(-tidyselect::any_of(c('details')))
 
         matches.out <- state$matched_results[['matches.out']]
 

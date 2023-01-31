@@ -529,7 +529,8 @@ mod_advanced_parameters_server <- function(id, state, session) {
         matched_rows_selected <- input[["matched_rows_selected"]] + 1
 
         state$advanced_results[['matched_intersect']] <-
-          matched_values()[['Dat']][matched_rows_selected, ]
+          matched_values()[['Dat']][matched_rows_selected, ] %>%
+          dplyr::select(-tidyselect::any_of(c('details')))
 
         matches.out <- state$advanced_results[['matches.out']]
 
