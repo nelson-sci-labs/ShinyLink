@@ -1,4 +1,4 @@
-#' Run the Shiny Application
+#' Run the ShinyLink Application
 #'
 #' @param ... arguments to pass to golem_opts.
 #' See `?golem::get_golem_options` for more details.
@@ -10,7 +10,7 @@
 #' @return No return value, called for launch the application.
 run_app <- function(
   onStart = NULL,
-  options = list("launch.browser"),
+  options = list(),
   enableBookmarking = NULL,
   uiPattern = "/",
   ...

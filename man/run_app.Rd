@@ -2,11 +2,11 @@
 % Please edit documentation in R/run_app.R
 \name{run_app}
 \alias{run_app}
-\title{Run the Shiny Application}
+\title{Run the ShinyLink Application}
 \usage{
 run_app(
   onStart = NULL,
-  options = list("launch.browser"),
+  options = list(),
   enableBookmarking = NULL,
   uiPattern = "/",
   ...
@@ -40,5 +40,5 @@ See `?golem::get_golem_options` for more details.}
 No return value, called for launch the application.
 }
 \description{
-Run the Shiny Application
+Run the ShinyLink Application
 }
