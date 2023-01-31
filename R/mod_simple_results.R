@@ -463,26 +463,9 @@ mod_simple_results_server <- function(id, state, parent){
     output[["info-children"]] <- renderText({
       paste0(capture.output(input[["matched_children"]]), collapse = "\n")
     })
+
     output[["matched-summary"]] <- renderPrint({
       matched_values()[['matched_summary']]
-    })
-    output[["plot-summary"]] <- renderPlot({
-      plot_summary <- matched_values()[['matched_summary']]
-
-      plot_summary <-
-        tidyr::pivot_longer(
-          plot_summary[1, 2:ncol(plot_summary)],
-          cols = 1:4,
-          names_to = "Match Type",
-          values_to = "Match Count"
-        ) %>% dplyr::mutate(`Match Count` = as.numeric(`Match Count`))
-
-      p <-
-        ggplot2::ggplot(plot_summary,
-                        ggplot2::aes(x = `Match Type`, y = `Match Count`, fill = `Match Type`)) +
-        ggplot2::geom_bar(stat = "identity") + ggplot2::theme_minimal() + ggplot2::scale_fill_manual(values =
-                                                                            c("#3b4992", "#ee2200", "#008b45", "#631779"))
-      p
     })
 
     output[["plot-venn"]] <- renderPlot({

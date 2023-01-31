@@ -116,16 +116,16 @@ mod_advanced_parameters_server <- function(id, state, session) {
       # Advanced parameters
       state$cut_a <- input$cut_a
       state$cut_p <- input$cut_p
-      state$w_lambda <- input$w_lambda
-      state$w_pi <- input$w_pi
+      # state$w_lambda <- input$w_lambda
+      # state$w_pi <- input$w_pi
 
-      state$estimate_only <- input$estimate_only
+      # state$estimate_only <- input$estimate_only
       state$dedupe_matches <- input$dedupe_matches
-      state$linprog_dedupe <- input$linprog_dedupe
+      # state$linprog_dedupe <- input$linprog_dedupe
 
       state$n_cores <- input$n_cores
       state$tol_em <- input$tol_em
-      state$threshold_match <- input$threshold_match
+      # state$threshold_match <- input$threshold_match
 
     })
 
@@ -419,15 +419,6 @@ mod_advanced_parameters_server <- function(id, state, session) {
             values_to = "Match Count"
           ) %>% dplyr::mutate(`Match Count` = as.numeric(`Match Count`))
 
-        # library(ggplot2)
-        p <-
-          ggplot2::ggplot(plot_summary,
-                          ggplot2::aes(x = `Match Type`, y = `Match Count`, fill = `Match Type`)) +
-          ggplot2::geom_bar(stat = "identity") + ggplot2::theme_minimal() + ggplot2::scale_fill_manual(values =
-                                                                                                         c("#3b4992", "#ee2200", "#008b45", "#631779"))
-
-        p
-
         sendSweetAlert(
           session = session,
           title = "Success!",
@@ -503,24 +494,6 @@ mod_advanced_parameters_server <- function(id, state, session) {
     output[["matched-summary"]] <- renderPrint({
       matched_values()[['matched_summary']]
     })
-    output[["plot-summary"]] <- renderPlot({
-      plot_summary <- matched_values()[['matched_summary']]
-
-      plot_summary <-
-        tidyr::pivot_longer(
-          plot_summary[1, 2:ncol(plot_summary)],
-          cols = 1:4,
-          names_to = "Match Type",
-          values_to = "Match Count"
-        ) %>% dplyr::mutate(`Match Count` = as.numeric(`Match Count`))
-
-      p <-
-        ggplot2::ggplot(plot_summary,
-                        ggplot2::aes(x = `Match Type`, y = `Match Count`, fill = `Match Type`)) +
-        ggplot2::geom_bar(stat = "identity") + ggplot2::theme_minimal() + ggplot2::scale_fill_manual(values =
-                                                                                                       c("#3b4992", "#ee2200", "#008b45", "#631779"))
-      p
-    })
 
     output[["plot-venn"]] <- renderPlot({
       if (length(state$advanced_results[['matches.out']]$matches$inds.a) != 0) {
@@ -535,7 +508,7 @@ mod_advanced_parameters_server <- function(id, state, session) {
         if (length(names(x)) == 2) {
           names(x) <- c("Sample Data", "Matching Data")
         }
-        ggvenn::ggvenn(x)
+        ggvenn::ggvenn(x, fill_color = c("#3b4992", "#008b45"))
       }
     })
 
@@ -551,7 +524,6 @@ mod_advanced_parameters_server <- function(id, state, session) {
     )
 
     # Update matched results based on selection -------------------------------
-
     observe({
       if (!is.null(input[["matched_rows_selected"]])) {
         matched_rows_selected <- input[["matched_rows_selected"]] + 1
@@ -616,18 +588,6 @@ mod_advanced_parameters_server <- function(id, state, session) {
         state$advanced_results[['matched_intersect']] <-
           dplyr::as_tibble(matched_values()[['Dat']])
       }
-    })
-
-
-
-    # Previous page button redirection
-    observeEvent(input$previous_simple_settings, {
-      updateTabItems(session = parent, "tabs", "simple_settings")
-    })
-
-    # Next page button redirection
-    observeEvent(input$next_simple_details, {
-      updateTabItems(session = parent, "tabs", "simple_details")
     })
   })
 }
