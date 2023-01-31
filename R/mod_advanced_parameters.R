@@ -75,7 +75,7 @@ mod_advanced_parameters_ui <- function(id) {
       helpText(
         "Click this button to execute matching, and your results will appear after a few seconds."
       ),
-      add_busy_bar(color = "#00a65a", height = "6px" ),
+      shinybusy::add_busy_bar(color = "#00a65a", height = "6px" ),
       actionButton(ns("match"), "Advanced Match", class = "btn-danger")
     ),
     box(
