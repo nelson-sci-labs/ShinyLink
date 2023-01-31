@@ -2,7 +2,7 @@
 #'
 #' @param request Internal parameter for `{shiny}`.
 #'     DO NOT REMOVE.
-#' @import shiny waiter
+#' @import shiny waiter shinybusy
 #' @importFrom shinyWidgets prettyToggle prettySwitch prettyCheckboxGroup
 #' @importFrom shinyWidgets actionBttn switchInput awesomeRadio materialSwitch
 #' @importFrom shinyWidgets prettyRadioButtons sliderTextInput checkboxGroupButtons chooseSliderSkin
@@ -12,6 +12,8 @@
 #' @noRd
 app_ui <- function(request) {
   tagList(
+    shinybusy::add_busy_bar(color = "#00a65a", height = "6px" ),
+
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # List the first level UI elements here
