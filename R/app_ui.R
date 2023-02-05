@@ -132,6 +132,11 @@ app_ui <- function(request) {
               icon = icon("square-poll-vertical")
             ),
             menuSubItem(
+              "Manual Inspection",
+              tabName = "manual_inspection",
+              icon = icon("user-plus")
+            ),
+            menuSubItem(
               "Matching Details",
               tabName = "simple_details",
               icon = icon("download")
@@ -183,8 +188,14 @@ app_ui <- function(request) {
                   mod_cleaning_date_ui("cleaning_date")),
           tabItem(tabName = "simple_settings",
                   mod_simple_settings_ui("simple_settings")),
+
+
           tabItem(tabName = "simple_results",
                   mod_simple_results_ui("simple_results")),
+          tabItem(tabName = "manual_inspection",
+                  mod_manual_inspection_ui("manual_inspection")),
+
+
           tabItem(tabName = "simple_details",
                   mod_simple_details_ui("simple_details")),
           tabItem(tabName = "advanced_parameters",

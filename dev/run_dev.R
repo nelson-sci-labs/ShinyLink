@@ -17,3 +17,10 @@ golem::document_and_reload()
 # Run the application
 run_app()
 
+# https://fontawesome.com/v4/icons/
+# TODO
+# [ ] - 1. Add manual inspection module, allow users to decide level of uncertainty before review matches.
+# [x] - 2. Allow all upper/lower case
+# [ ] - 3. Add save and load settings for gender/race recoding and variable assignment
+# [ ] - 4. Add finding duplicates  within a dataset
+# [ ] - 5. Add functionality to download all results together.

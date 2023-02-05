@@ -22,15 +22,20 @@ attachment::att_amend_desc()
 ## Create a module infrastructure in R/
 golem::add_module(name = "header", with_test = TRUE)
 golem::add_module(name = "sidebar", with_test = TRUE)
+
 golem::add_module(name = "uploading", with_test = TRUE)
+
 golem::add_module(name = "cleaning_duplicate", with_test = TRUE)
 golem::add_module(name = "cleaning_assignment", with_test = TRUE)
 golem::add_module(name = "cleaning_gender", with_test = TRUE)
 golem::add_module(name = "cleaning_date", with_test = TRUE)
 golem::add_module(name = "cleaning_imputation", with_test = TRUE)
+
 golem::add_module(name = "simple_settings", with_test = TRUE)
 golem::add_module(name = "simple_results", with_test = TRUE)
+golem::add_module(name = "manual_inspection", with_test = TRUE)
 golem::add_module(name = "simple_details", with_test = TRUE)
+
 golem::add_module(name = "advanced_parameters", with_test = TRUE)
 golem::add_module(name = "advanced_results", with_test = TRUE)
 golem::add_module(name = "advanced_details", with_test = TRUE)

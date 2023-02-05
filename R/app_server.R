@@ -62,9 +62,15 @@ app_server <- function(input, output, session) {
   mod_cleaning_imputation_server("cleaning_imputation", app_state, session)
   mod_simple_settings_server("simple_settings", app_state, session)
   mod_simple_results_server("simple_results", app_state, session)
+
+  mod_manual_inspection_server("manual_inspection", app_state, session)
+
   mod_simple_details_server("simple_details", app_state, session)
   mod_advanced_parameters_server("advanced_parameters", app_state, session)
   # mod_advanced_results_server("advanced_results", app_state, session)
   mod_advanced_details_server("advanced_details", app_state, session)
 
 }
+
+
+

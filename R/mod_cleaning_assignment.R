@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_cleaning_assignment_ui <- function(id){
+mod_cleaning_assignment_ui <- function(id) {
   ns <- NS(id)
   tagList(
     box(
@@ -16,8 +16,10 @@ mod_cleaning_assignment_ui <- function(id){
       status = "success",
       solidHeader = FALSE,
       collapsible = FALSE,
-      helpText("Identify which variables correspond to each piece of information")
-      ),
+      helpText(
+        "Identify which variables correspond to each piece of information"
+      )
+    ),
     fluidRow(column(
       width = 6,
       box(
@@ -29,20 +31,60 @@ mod_cleaning_assignment_ui <- function(id){
         fluidRow(
           column(
             width = 6,
-            selectInput(ns("firstname_dfA"),
-                        "Firstname:",
-                        choices = NULL),
-            selectInput(ns("middlename_dfA"),
-                        "Middlename",
-                        choices = NULL),
-            selectInput(ns("lastname_dfA"),
-                        "Lastname",
-                        choices = NULL),
+            fluidRow(
+              column(width = 7, selectInput(
+                ns("firstname_dfA"),
+                "Firstname:",
+                choices = NULL
+              )),
+              column(
+                width = 5,
+                radioGroupButtons(
+                  inputId = ns("firstname_dfA_format"),
+                  label = "Format",
+                  choices = c("D", "U", "L"),
+                  status = "primary"
+                )
+              )
+            ),
+            fluidRow(
+              column(width = 7, selectInput(
+                ns("middlename_dfA"),
+                "Middlename",
+                choices = NULL
+              )),
+              column(
+                width = 5,
+                radioGroupButtons(
+                  inputId = ns("middlename_dfA_format"),
+                  label = "Format",
+                  choices = c("D", "U", "L"),
+                  status = "primary"
+                )
+              )
+            ),
+            fluidRow(
+              column(width = 7,
+                     selectInput(
+                       ns("lastname_dfA"),
+                       "Lastname",
+                       choices = NULL
+                     )),
+              column(
+                width = 5,
+                radioGroupButtons(
+                  inputId = ns("lastname_dfA_format"),
+                  label = "Format",
+                  choices = c("D", "U", "L"),
+                  status = "primary"
+                )
+              )
+            ),
             selectInput(ns("birthday_dfA"),
                         "Birthday",
                         choices = NULL),
             selectInput(ns("race_dfA"),
-                        "Race",
+                        "Ethnicity",
                         choices = NULL)
           ),
           column(
@@ -77,20 +119,60 @@ mod_cleaning_assignment_ui <- function(id){
         fluidRow(
           column(
             width = 6,
-            selectInput(ns("firstname_dfB"),
-                        "Firstname:",
-                        choices = NULL),
-            selectInput(ns("middlename_dfB"),
-                        "Middlename",
-                        choices = NULL),
-            selectInput(ns("lastname_dfB"),
-                        "Lastname",
-                        choices = NULL),
+            fluidRow(
+              column(width = 7, selectInput(
+                ns("firstname_dfB"),
+                "Firstname:",
+                choices = NULL
+              )),
+              column(
+                width = 5,
+                radioGroupButtons(
+                  inputId = ns("firstname_dfB_format"),
+                  label = "Format",
+                  choices = c("D", "U", "L"),
+                  status = "primary"
+                )
+              )
+            ),
+            fluidRow(
+              column(width = 7, selectInput(
+                ns("middlename_dfB"),
+                "Middlename",
+                choices = NULL
+              )),
+              column(
+                width = 5,
+                radioGroupButtons(
+                  inputId = ns("middlename_dfB_format"),
+                  label = "Format",
+                  choices = c("D", "U", "L"),
+                  status = "primary"
+                )
+              )
+            ),
+            fluidRow(
+              column(width = 7,
+                     selectInput(
+                       ns("lastname_dfB"),
+                       "Lastname",
+                       choices = NULL
+                     )),
+              column(
+                width = 5,
+                radioGroupButtons(
+                  inputId = ns("lastname_dfB_format"),
+                  label = "Format",
+                  choices = c("D", "U", "L"),
+                  status = "primary"
+                )
+              )
+            ),
             selectInput(ns("birthday_dfB"),
                         "Birthday",
                         choices = NULL),
             selectInput(ns("race_dfB"),
-                        "Race",
+                        "Ethnicity",
                         choices = NULL)
           ),
           column(
@@ -174,8 +256,8 @@ mod_cleaning_assignment_ui <- function(id){
 #' cleaning_assignment Server Functions
 #' @importFrom shinyWidgets sendSweetAlert
 #' @noRd
-mod_cleaning_assignment_server <- function(id, state, parent){
-  moduleServer( id, function(input, output, session){
+mod_cleaning_assignment_server <- function(id, state, parent) {
+  moduleServer(id, function(input, output, session) {
     ns <- session$ns
     # library(magrittr)
     # pipe operator friendly set column names function
@@ -226,7 +308,6 @@ mod_cleaning_assignment_server <- function(id, state, parent){
     }
 
     observe({
-
       req(state$dfA_cleaned_duplicate)
       req(state$dfB_cleaned_duplicate)
 
@@ -289,7 +370,6 @@ mod_cleaning_assignment_server <- function(id, state, parent){
     })
 
     assigned_dataset_a <- reactive({
-
       req(state$dfA_cleaned_duplicate)
 
       data <- state$dfA_cleaned_duplicate %>% set_col_names(
@@ -305,12 +385,27 @@ mod_cleaning_assignment_server <- function(id, state, parent){
         sex = input$sex_dfA
       )
 
+      if (input$firstname_dfA_format == "U") {
+        data$firstname <- toupper(data$firstname)
+      } else if (input$firstname_dfA_format == "L") {
+        data$firstname <- tolower(data$firstname)
+      }
+      if (input$middlename_dfA_format == "U") {
+        data$middlename <- toupper(data$middlename)
+      } else if (input$middlename_dfA_format == "L") {
+        data$middlename <- tolower(data$middlename)
+      }
+      if (input$lastname_dfA_format == "U") {
+        data$lastname <- toupper(data$lastname)
+      } else if (input$lastname_dfA_format == "L") {
+        data$lastname <- tolower(data$lastname)
+      }
+
       state$dfA_cleaned_assignment <- data # update state
       return(data)
     })
 
     assigned_dataset_b <- reactive({
-
       req(state$dfB_cleaned_duplicate)
 
       data <- state$dfB_cleaned_duplicate %>% set_col_names(
@@ -325,6 +420,22 @@ mod_cleaning_assignment_server <- function(id, state, parent){
         race = input$race_dfB,
         sex = input$sex_dfB
       )
+
+      if (input$firstname_dfB_format == "U") {
+        data$firstname <- toupper(data$firstname)
+      } else if (input$firstname_dfB_format == "L") {
+        data$firstname <- tolower(data$firstname)
+      }
+      if (input$middlename_dfB_format == "U") {
+        data$middlename <- toupper(data$middlename)
+      } else if (input$middlename_dfB_format == "L") {
+        data$middlename <- tolower(data$middlename)
+      }
+      if (input$lastname_dfB_format == "U") {
+        data$lastname <- toupper(data$lastname)
+      } else if (input$lastname_dfB_format == "L") {
+        data$lastname <- tolower(data$lastname)
+      }
 
       state$dfB_cleaned_assignment <- data # update state
       return(data)
@@ -344,13 +455,17 @@ mod_cleaning_assignment_server <- function(id, state, parent){
         lengthMenu = list(c(5, 20, 50,-1), c('default', '20', '50', 'All')),
         pageLength = 5,
         dom = 'Blfrtip',
-        buttons = list('copy', list(
-          extend = 'collection',
-          buttons = list(
-            list(extend = 'csv', filename = "Assigned Sample Data"),
-            list(extend = 'excel', filename = "Assigned Sample Data")),
-          text = 'Download'
-        ))
+        buttons = list(
+          'copy',
+          list(
+            extend = 'collection',
+            buttons = list(
+              list(extend = 'csv', filename = "Assigned Sample Data"),
+              list(extend = 'excel', filename = "Assigned Sample Data")
+            ),
+            text = 'Download'
+          )
+        )
       ),
       class = 'compact hover row-border nowrap stripe'
     )
@@ -368,13 +483,17 @@ mod_cleaning_assignment_server <- function(id, state, parent){
         lengthMenu = list(c(5, 20, 50,-1), c('default', '20', '50', 'All')),
         pageLength = 5,
         dom = 'Blfrtip',
-        buttons = list('copy', list(
-          extend = 'collection',
-          buttons = list(
-            list(extend = 'csv', filename = "Assigned Matching Data"),
-            list(extend = 'excel', filename = "Assigned Matching Data")),
-          text = 'Download'
-        ))
+        buttons = list(
+          'copy',
+          list(
+            extend = 'collection',
+            buttons = list(
+              list(extend = 'csv', filename = "Assigned Matching Data"),
+              list(extend = 'excel', filename = "Assigned Matching Data")
+            ),
+            text = 'Download'
+          )
+        )
       ),
       class = 'compact hover row-border nowrap stripe'
     )

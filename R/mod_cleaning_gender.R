@@ -643,7 +643,7 @@ mod_cleaning_gender_server <- function(id, state, parent){
         data <- data %>%
           dplyr::mutate(race = replace(race, race %in% input$recoding_cauc_a, "Caucasian"))
         data <- data %>%
-          dplyr::mutate(race = replace(race, race %in% input$recoding_afric_a, "Afican American"))
+          dplyr::mutate(race = replace(race, race %in% input$recoding_afric_a, "African American"))
         data <- data %>%
           dplyr::mutate(race = replace(race, race %in% input$recoding_hisp_a, "Hispanic"))
 
@@ -678,7 +678,7 @@ mod_cleaning_gender_server <- function(id, state, parent){
         data <- data %>%
           dplyr::mutate(race = replace(race, race %in% input$recoding_cauc_b, "Caucasian"))
         data <- data %>%
-          dplyr::mutate(race = replace(race, race %in% input$recoding_afric_b, "Afican American"))
+          dplyr::mutate(race = replace(race, race %in% input$recoding_afric_b, "African American"))
         data <- data %>%
           dplyr::mutate(race = replace(race, race %in% input$recoding_hisp_b, "Hispanic"))
 
