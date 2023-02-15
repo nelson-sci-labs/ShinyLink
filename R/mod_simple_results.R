@@ -258,6 +258,120 @@ mod_simple_results_server <- function(id, state, parent){
       "}"
     )
 
+    # Function to calculate Levels of match based on matching status of each field
+    set_match_levels <- function(matched_dfs) {
+      name_matching_fields <- colnames(matched_dfs)[grep("match_status_", colnames(matched_dfs))]
+
+
+      # Definition of Matching Uncertainty, follows a low to high sequence, the higher levels will override the lower levels
+      # STEP 1 ------------------------------------------------------------------
+      # Initialize the match_level and set to Level 6 by default
+      # Level 6: Certainty of Match: LOW - Requires manual review
+      matched_dfs <- matched_dfs %>% dplyr::mutate(match_level = 6)
+
+      # STEP 2 ------------------------------------------------------------------
+      # Level 5: Certainty of Match: MODERATE - Requires manual review
+      # Level 5 linkages must meet more generalized deterministic criteria than matches at higher levels.
+      # In general, most of these cases have similarity in SSN and DOB and some of the name elements (first name, last name, middle name).
+      if ("match_status_birthday"  %in% name_matching_fields &
+          "match_status_lastname"  %in% name_matching_fields) {
+        matched_dfs <-
+          matched_dfs %>% dplyr::mutate(match_level = dplyr::if_else(match_status_birthday %in% c(1,2) & match_status_lastname %in% c(1,2), 5, match_level))
+      }
+      if ("match_status_SSN"       %in% name_matching_fields &
+          "match_status_lastname"  %in% name_matching_fields) {
+        matched_dfs <-
+          matched_dfs %>% dplyr::mutate(match_level = dplyr::if_else(match_status_SSN %in% c(1,2) & match_status_lastname %in% c(1,2), 5, match_level))
+      }
+      if ("match_status_birthday"  %in% name_matching_fields &
+          "match_status_firstname" %in% name_matching_fields) {
+        matched_dfs <-
+          matched_dfs %>% dplyr::mutate(match_level = dplyr::if_else(match_status_birthday %in% c(1,2) & match_status_firstname %in% c(1,2), 5, match_level))
+      }
+      if ("match_status_SSN"       %in% name_matching_fields &
+          "match_status_firstname" %in% name_matching_fields) {
+        matched_dfs <-
+          matched_dfs %>% dplyr::mutate(match_level = dplyr::if_else(match_status_SSN %in% c(1,2) & match_status_firstname %in% c(1,2), 5, match_level))
+      }
+      if ("match_status_birthday"   %in% name_matching_fields &
+          "match_status_middlename" %in% name_matching_fields) {
+        matched_dfs <-
+          matched_dfs %>% dplyr::mutate(match_level = dplyr::if_else(match_status_birthday %in% c(1,2) & match_status_middlename %in% c(1,2), 5, match_level))
+      }
+      if ("match_status_SSN"        %in% name_matching_fields &
+          "match_status_middlename" %in% name_matching_fields) {
+        matched_dfs <-
+          matched_dfs %>% dplyr::mutate(match_level = dplyr::if_else(match_status_SSN %in% c(1,2) & match_status_middlename %in% c(1,2), 5, match_level))
+      }
+
+      # STEP 3 ------------------------------------------------------------------
+      # LEVEL 4: Certainty of Match:  FAIRLY-HIGH
+      # 1) the first name, last name, partial match, the birthday are similar, the SSN is missing
+      if ("match_status_birthday"  %in% name_matching_fields &
+          "match_status_firstname" %in% name_matching_fields &
+          "match_status_lastname"  %in% name_matching_fields) {
+        matched_dfs <-
+          matched_dfs %>% dplyr::mutate(match_level = dplyr::if_else(match_status_birthday %in% c(1,2) & match_status_firstname %in% c(1,2) & match_status_lastname %in% c(1,2), 4, match_level))
+      }
+      # 2) the first name and last name partial match and the SSN is similar and birthday are missing.
+      if ("match_status_SSN"       %in% name_matching_fields &
+          "match_status_firstname" %in% name_matching_fields &
+          "match_status_lastname"  %in% name_matching_fields) {
+        matched_dfs <-
+          matched_dfs %>% dplyr::mutate(match_level = dplyr::if_else(match_status_SSN %in% c(1,2) & match_status_firstname %in% c(1,2) & match_status_lastname %in% c(1,2), 4, match_level))
+      }
+
+      # STEP 4 ------------------------------------------------------------------
+      # LEVEL 3: Certainty of Match: HIGH
+      # 1) the first name, last name,  exact match, the birthday are similar, the SSN is missing.
+      if ("match_status_birthday"  %in% name_matching_fields &
+          "match_status_firstname" %in% name_matching_fields &
+          "match_status_lastname"  %in% name_matching_fields) {
+        matched_dfs <-
+          matched_dfs %>% dplyr::mutate(match_level = dplyr::if_else(match_status_birthday %in% c(1,2) & match_status_firstname == 2 & match_status_lastname == 2, 3, match_level))
+      }
+      # 2) the first name and last name exact match, the SSN are similar, the birthday is missing.
+      if ("match_status_SSN"       %in% name_matching_fields &
+          "match_status_firstname" %in% name_matching_fields &
+          "match_status_lastname"  %in% name_matching_fields) {
+        matched_dfs <-
+          matched_dfs %>% dplyr::mutate(match_level = dplyr::if_else(match_status_SSN %in% c(1,2) & match_status_firstname == 2 & match_status_lastname == 2, 3, match_level))
+      }
+
+      # STEP 5 ------------------------------------------------------------------
+      # LEVEL 2: Certainty of Match: VERY HIGH
+      # 1) DOB is an exact match, the first name and last name are compellingly similar and the SSN is missing or
+      if ("match_status_birthday"  %in% name_matching_fields &
+          "match_status_firstname" %in% name_matching_fields &
+          "match_status_lastname"  %in% name_matching_fields) {
+        matched_dfs <-
+          matched_dfs %>% dplyr::mutate(match_level = dplyr::if_else(match_status_birthday == 2 & match_status_firstname %in% c(1,2) & match_status_lastname %in% c(1,2), 2, match_level))
+      }
+      # 2) SSN is an exact match, the first name and last name are compellingly similar and the DOB is missing or
+      if ("match_status_SSN"       %in% name_matching_fields &
+          "match_status_firstname" %in% name_matching_fields &
+          "match_status_lastname"  %in% name_matching_fields) {
+        matched_dfs <-
+          matched_dfs %>% dplyr::mutate(match_level = dplyr::if_else(match_status_SSN == 2 & match_status_firstname %in% c(1,2) & match_status_lastname %in% c(1,2), 2, match_level))
+      }
+
+      # STEP 6 ------------------------------------------------------------------
+      # LEVEL 1: Certainty of Match: EXACT MATCH
+      n_matching_fields <- length(colnames(matched_dfs)[grep("match_status_", colnames(matched_dfs))])
+
+      # 1)- All field = 2
+      matched_dfs <-
+        matched_dfs %>% dplyr::mutate(match_level = dplyr::if_else(sum_match == 2 * n_matching_fields, 1, match_level))
+
+      # 2)- All field = 2 except for middle name = NA
+      if ("match_status_middlename" %in% name_matching_fields) {
+        matched_dfs <-
+          matched_dfs %>% dplyr::mutate(match_level = dplyr::if_else(sum_match == 2 * (n_matching_fields - 1) & is.na(match_status_middlename), 1, match_level))
+      }
+
+      return(matched_dfs)
+    }
+
     # Simple Matching ---------------------------------------------------------
     matched_values <- eventReactive(input$match, {
 
@@ -280,6 +394,23 @@ mod_simple_results_server <- function(id, state, parent){
       #   n.cores = 1
       # )
 
+      # dfA <- readxl::read_excel('inst/app/www/lkselectedrecs_cleaned.xlsx')
+      # dfA$birthday <- as.character(dfA$birthday)
+      # dfB <- readxl::read_excel('inst/app/www/redcapoutput_cleaned.xlsx')
+      # dfB$birthday <- as.character(dfB$birthday)
+      # matches.out <- fastLink::fastLink(
+      #   dfA = dfA, dfB = dfB,
+      #   # varnames = c("firstname", "middlename", "lastname"),
+      #   # stringdist.match = c("firstname", "middlename", "lastname"),
+      #   varnames = c("firstname", "middlename", "lastname", "birthday", "race", "sex"),
+      #   stringdist.match = c("firstname", "middlename", "lastname", "birthday", "race", "sex"),
+      #   # numeric.match =
+      #   partial.match = c("firstname", "middlename", "lastname", "birthday", "race", "sex"),
+      #   n.cores = 1
+      # )
+
+      # End of testing code
+
       matches.out <- fastLink::fastLink(
         dfA = dfA,
         dfB = dfB,
@@ -289,9 +420,9 @@ mod_simple_results_server <- function(id, state, parent){
         partial.match = state$partial_matching
       )
 
-      print(length(matches.out$matches$inds.a))
-      print(length(matches.out$matches$inds.a) == 0)
-      print(length(matches.out$matches$inds.a) != 0)
+      # print(length(matches.out$matches$inds.a))
+      # print(length(matches.out$matches$inds.a) == 0)
+      # print(length(matches.out$matches$inds.a) != 0)
 
       if (length(matches.out$matches$inds.a) == 0) {
         matched_results <- list(
@@ -327,18 +458,37 @@ mod_simple_results_server <- function(id, state, parent){
           fl.out = matches.out,
           threshold.match = 0.85
         )
-        matched_dfs <- matched_dfs %>%
-          dplyr::select(-tidyselect::any_of(
-            c(
-              'gamma.1',
-              'gamma.2',
-              'gamma.3',
-              'gamma.4',
-              'gamma.5',
-              'gamma.6'
-              # 'posterior'
-            )
-          ))
+        matched_dfs <- tibble::as_tibble(matched_dfs)
+
+        # Get the column IDs with "gamma" and
+        # colnames(matched_dfs)[grep("gamma", colnames(matched_dfs))] <- state$matching_variables
+        # match_status codes: 2 = Exact, 1 = Partial, 0 = Different, NA = No data from both side
+
+        # Testing version
+        # colnames(matched_dfs)[grep("gamma", colnames(matched_dfs))] <-
+        #   paste0("match_status_", c("firstname", "middlename", "lastname", "birthday", "race", "sex"))
+
+        # Production version
+        colnames(matched_dfs)[grep("gamma", colnames(matched_dfs))] <-
+          paste0("match_status_", state$matching_variables)
+
+        colnames(matched_dfs)[colnames(matched_dfs) == "posterior"] <- "posterior_score"
+
+
+        # Add the sum matching fields column
+        name_matching_fields <- colnames(matched_dfs)[grep("match_status_", colnames(matched_dfs))]
+        matched_dfs <- matched_dfs %>% dplyr::mutate(sum_match = rowSums(dplyr::across(name_matching_fields), na.rm=TRUE))
+
+        # Initialize the manual_selection and set to NA = Undecided by default
+        # 1 = Same Person, 0 = Different Person, NA = Undecided
+        matched_dfs <- matched_dfs %>% dplyr::mutate(manual_selection = NA)
+
+        # Calculate levels of match
+        matched_dfs <- set_match_levels(matched_dfs)
+
+        # Add the index from dfA and dfB
+        matched_dfs$inds.a <- matches.out$matches$inds.a
+        matched_dfs$inds.b <- matches.out$matches$inds.b
 
         subdat <- list()
 
@@ -386,6 +536,7 @@ mod_simple_results_server <- function(id, state, parent){
           Dat = Dat,
           matches.out = matches.out,
           matched_summary = matched_summary,
+          matched_dfs = matched_dfs,
           dfA.match = dfA.match,
           dfA.unmatch = dfA.unmatch,
           dfB.match = dfB.match,
@@ -493,17 +644,33 @@ mod_simple_results_server <- function(id, state, parent){
 
         # Testing only
         # dfA <- readxl::read_excel('inst/app/www/lkselectedrecs_cleaned.xlsx')
+        # dfA$birthday <- as.character(dfA$birthday)
         # dfB <- readxl::read_excel('inst/app/www/redcapoutput_cleaned.xlsx')
-        # matched_rows_selected <- c(1, 2, 3, 7)
+        # dfB$birthday <- as.character(dfB$birthday)
+        #
+        # # matched_rows_selected <- c(1, 2, 3, 7)
         #
         # matches.out <- fastLink::fastLink(
         #   dfA = dfA, dfB = dfB,
-        #   varnames = c("firstname", "middlename", "lastname", "race", "sex"),
-        #   # stringdist.match = c("firstname", "middlename", "lastname", "race", "sex"),
+        #   # varnames = c("firstname", "middlename", "lastname"),
+        #   # stringdist.match = c("firstname", "middlename", "lastname"),
+        #   varnames = c("firstname", "middlename", "lastname", "birthday", "race", "sex"),
+        #   stringdist.match = c("firstname", "middlename", "lastname", "birthday", "race", "sex"),
         #   # numeric.match =
-        #   # partial.match = c("firstname", "lastname"),
+        #   partial.match = c("firstname", "middlename", "lastname", "birthday", "race", "sex"),
         #   n.cores = 1
         # )
+        #
+        # summary(matches.out)
+        #
+        # matched_dfs <- fastLink::getMatches(
+        #   dfA = dfA,
+        #   dfB = dfB,
+        #   fl.out = matches.out,
+        #   threshold.match = 0.85,
+        #   combine.dfs = TRUE
+        # )
+        # End of testing zone
 
         dfA <- state$state_dfA
         dfB <- state$state_dfB
@@ -525,6 +692,9 @@ mod_simple_results_server <- function(id, state, parent){
           threshold.match = 0.85,
           combine.dfs = TRUE
         )
+
+
+        # TODO needs to be updated
         matched_dfs <- matched_dfs %>%
           dplyr::select(-tidyselect::any_of(
             c(

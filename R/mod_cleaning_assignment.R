@@ -29,6 +29,10 @@ mod_cleaning_assignment_ui <- function(id) {
         solidHeader = FALSE,
         collapsible = FALSE,
         fluidRow(
+          column(6, fileInput(ns("load_config_dfA"), NULL, buttonLabel = "Load Settings", placeholder = "Select configuration file to proceed")),
+          column(6, downloadButton(ns("save_config_dfA"), "Download Current Settings as JSON format"))
+        ),
+        fluidRow(
           column(
             width = 6,
             fluidRow(
@@ -101,8 +105,8 @@ mod_cleaning_assignment_ui <- function(id) {
             selectInput(ns("city_dfA"),
                         "City",
                         choices = NULL),
-            selectInput(ns("birthyear_dfA"),
-                        "Birthyear",
+            selectInput(ns("SSN_dfA"),
+                        "SSN",
                         choices = NULL)
           )
         )
@@ -116,6 +120,10 @@ mod_cleaning_assignment_ui <- function(id) {
         status = "maroon",
         solidHeader = FALSE,
         collapsible = FALSE,
+        fluidRow(
+          column(6, fileInput(ns("load_config_dfB"), NULL, buttonLabel = "Load Settings", placeholder = "Select configuration file to proceed")),
+          column(6, downloadButton(ns("save_config_dfB"), "Download Current Settings as JSON format"))
+        ),
         fluidRow(
           column(
             width = 6,
@@ -189,8 +197,8 @@ mod_cleaning_assignment_ui <- function(id) {
             selectInput(ns("city_dfB"),
                         "City",
                         choices = NULL),
-            selectInput(ns("birthyear_dfB"),
-                        "Birthyear",
+            selectInput(ns("SSN_dfB"),
+                        "SSN",
                         choices = NULL)
           )
         )
@@ -255,6 +263,8 @@ mod_cleaning_assignment_ui <- function(id) {
 
 #' cleaning_assignment Server Functions
 #' @importFrom shinyWidgets sendSweetAlert
+#' @importFrom jsonlite toJSON read_json
+#'
 #' @noRd
 mod_cleaning_assignment_server <- function(id, state, parent) {
   moduleServer(id, function(input, output, session) {
@@ -262,6 +272,226 @@ mod_cleaning_assignment_server <- function(id, state, parent) {
     # library(magrittr)
     # pipe operator friendly set column names function
 
+    # load_config_dfA
+    # save_config_dfA
+
+    # Save User configs -------------------------------------------------------
+    config_data_dfA <- reactive(
+      list(
+        firstname_dfA = input$firstname_dfA,
+        middlename_dfA = input$middlename_dfA,
+        lastname_dfA = input$lastname_dfA,
+        housenum_dfA = input$housenum_dfA,
+        streetname_dfA = input$streetname_dfA,
+        city_dfA = input$city_dfA,
+        SSN_dfA = input$SSN_dfA,
+        birthday_dfA = input$birthday_dfA,
+        race_dfA = input$race_dfA,
+        sex_dfA = input$sex_dfA,
+        firstname_dfA_format = input$firstname_dfA_format,
+        middlename_dfA_format = input$middlename_dfA_format,
+        lastname_dfA_format = input$lastname_dfA_format
+      ))
+
+    config_data_dfB <- reactive(
+      list(
+        firstname_dfB = input$firstname_dfB,
+        middlename_dfB = input$middlename_dfB,
+        lastname_dfB = input$lastname_dfB,
+        housenum_dfB = input$housenum_dfB,
+        streetname_dfB = input$streetname_dfB,
+        city_dfB = input$city_dfB,
+        SSN_dfB = input$SSN_dfB,
+        birthday_dfB = input$birthday_dfB,
+        race_dfB = input$race_dfB,
+        sex_dfB = input$sex_dfB,
+        firstname_dfB_format = input$firstname_dfB_format,
+        middlename_dfB_format = input$middlename_dfB_format,
+        lastname_dfB_format = input$lastname_dfB_format
+      ))
+
+    output$save_config_dfA <- downloadHandler(
+      filename = function() {
+        paste0("sample-assign-var-config-", Sys.time(), ".json")
+      },
+      content = function(file) {
+        write(toJSON(config_data_dfA()), file)
+      }
+    )
+
+    output$save_config_dfB <- downloadHandler(
+      filename = function() {
+        paste0("matching-assign-var-config-", Sys.time(), ".json")
+      },
+      content = function(file) {
+        write(toJSON(config_data_dfB()), file)
+      }
+    )
+
+
+
+    # Load User configs -------------------------------------------------------
+    config_dfA <- reactive({
+      infile <- input$load_config_dfA
+      if (is.null(infile)) {
+        return(NULL)
+      }
+      read_json(infile$datapath)
+    })
+
+    config_dfB <- reactive({
+      infile <- input$load_config_dfB
+      if (is.null(infile)) {
+        return(NULL)
+      }
+      read_json(infile$datapath)
+    })
+
+    observeEvent(input$load_config_dfA, {
+      req(state$dfA_cleaned_duplicate)
+      loaded_config_data <- config_dfA()
+
+      data_dfA <- state$dfA_cleaned_duplicate
+
+      colnames_dfA <- colnames(data_dfA)
+      # set the label and select items
+      updateSelectInput(session, "firstname_dfA",
+                        choices = c('', colnames_dfA),
+                        selected = loaded_config_data[['firstname_dfA']])
+      updateSelectInput(session, "middlename_dfA",
+                        choices = c('', colnames_dfA),
+                        selected = loaded_config_data[['middlename_dfA']])
+      updateSelectInput(session, "lastname_dfA",
+                        choices = c('', colnames_dfA),
+                        selected = loaded_config_data[['lastname_dfA']])
+      updateSelectInput(session, "housenum_dfA",
+                        choices = c('', colnames_dfA),
+                        selected = loaded_config_data[['housenum_dfA']])
+      updateSelectInput(session, "streetname_dfA",
+                        choices = c('', colnames_dfA),
+                        selected = loaded_config_data[['streetname_dfA']])
+      updateSelectInput(session, "city_dfA",
+                        choices = c('', colnames_dfA),
+                        selected = loaded_config_data[['city_dfA']])
+      updateSelectInput(session, "SSN_dfA",
+                        choices = c('', colnames_dfA),
+                        selected = loaded_config_data[['SSN_dfA']])
+      updateSelectInput(session, "birthday_dfA",
+                        choices = c('', colnames_dfA),
+                        selected = loaded_config_data[['birthday_dfA']])
+      updateSelectInput(session, "race_dfA",
+                        choices = c('', colnames_dfA),
+                        selected = loaded_config_data[['race_dfA']])
+      updateSelectInput(session, "sex_dfA",
+                        choices = c('', colnames_dfA),
+                        selected = loaded_config_data[['sex_dfA']])
+
+
+      updateRadioGroupButtons(
+        session = session,
+        inputId = "firstname_dfA_format",
+        label = "Format",
+        choices = c("D", "U", "L"),
+        selected = loaded_config_data[['firstname_dfA_format']],
+        status = "primary"
+      )
+      updateRadioGroupButtons(
+        session = session,
+        inputId = "middlename_dfA_format",
+        label = "Format",
+        choices = c("D", "U", "L"),
+        selected = loaded_config_data[['middlename_dfA_format']],
+        status = "primary"
+      )
+      updateRadioGroupButtons(
+        session = session,
+        inputId = "lastname_dfA_format",
+        label = "Format",
+        choices = c("D", "U", "L"),
+        selected = loaded_config_data[['lastname_dfA_format']],
+        status = "primary"
+      )
+      # Notification
+      showNotification("User defined configuration file loaded for the Sample Data Set",
+                       type = "message")
+    })
+
+    observeEvent(input$load_config_dfB, {
+      req(state$dfB_cleaned_duplicate)
+      loaded_config_data <- config_dfB()
+
+      data_dfB <- state$dfB_cleaned_duplicate
+
+      colnames_dfB <- colnames(data_dfB)
+      # set the label and select items
+      updateSelectInput(session, "firstname_dfB",
+                        choices = c('', colnames_dfB),
+                        selected = loaded_config_data[['firstname_dfB']])
+      updateSelectInput(session, "middlename_dfB",
+                        choices = c('', colnames_dfB),
+                        selected = loaded_config_data[['middlename_dfB']])
+      updateSelectInput(session, "lastname_dfB",
+                        choices = c('', colnames_dfB),
+                        selected = loaded_config_data[['lastname_dfB']])
+      updateSelectInput(session, "housenum_dfB",
+                        choices = c('', colnames_dfB),
+                        selected = loaded_config_data[['housenum_dfB']])
+      updateSelectInput(session, "streetname_dfB",
+                        choices = c('', colnames_dfB),
+                        selected = loaded_config_data[['streetname_dfB']])
+      updateSelectInput(session, "city_dfB",
+                        choices = c('', colnames_dfB),
+                        selected = loaded_config_data[['city_dfB']])
+      updateSelectInput(session, "SSN_dfB",
+                        choices = c('', colnames_dfB),
+                        selected = loaded_config_data[['SSN_dfB']])
+      updateSelectInput(session, "birthday_dfB",
+                        choices = c('', colnames_dfB),
+                        selected = loaded_config_data[['birthday_dfB']])
+      updateSelectInput(session, "race_dfB",
+                        choices = c('', colnames_dfB),
+                        selected = loaded_config_data[['race_dfB']])
+      updateSelectInput(session, "sex_dfB",
+                        choices = c('', colnames_dfB),
+                        selected = loaded_config_data[['sex_dfB']])
+
+      updateRadioGroupButtons(
+        session = session,
+        inputId = "firstname_dfB_format",
+        label = "Format",
+        choices = c("D", "U", "L"),
+        selected = loaded_config_data[['firstname_dfB_format']],
+        status = "primary"
+      )
+      updateRadioGroupButtons(
+        session = session,
+        inputId = "middlename_dfB_format",
+        label = "Format",
+        choices = c("D", "U", "L"),
+        selected = loaded_config_data[['middlename_dfB_format']],
+        status = "primary"
+      )
+      updateRadioGroupButtons(
+        session = session,
+        inputId = "lastname_dfB_format",
+        label = "Format",
+        choices = c("D", "U", "L"),
+        selected = loaded_config_data[['lastname_dfB_format']],
+        status = "primary"
+      )
+
+      # Notification
+      showNotification("User defined configuration file loaded for the Matching Data Set",
+                       type = "message")
+      # sendSweetAlert(
+      #   session = session,
+      #   title = "Success!",
+      #   text = "Now assign values for columns using the dropdown menus in each field",
+      #   type = "success"
+      # )
+    })
+
+    # Function to assign variable names ---------------------------------------
     set_col_names <- function(.data,
                               firstname = NULL,
                               middlename = NULL,
@@ -269,7 +499,7 @@ mod_cleaning_assignment_server <- function(id, state, parent) {
                               housenum = NULL,
                               streetname = NULL,
                               city = NULL,
-                              birthyear = NULL,
+                              SSN = NULL,
                               birthday = NULL,
                               race = NULL,
                               sex = NULL) {
@@ -292,8 +522,8 @@ mod_cleaning_assignment_server <- function(id, state, parent) {
       if (!is.null(city) && city != "") {
         .data <- dplyr::rename(.data, city = city)
       }
-      if (!is.null(birthyear) && birthyear != "") {
-        .data <- dplyr::rename(.data, birthyear = birthyear)
+      if (!is.null(SSN) && SSN != "") {
+        .data <- dplyr::rename(.data, SSN = SSN)
       }
       if (!is.null(birthday) && birthday != "") {
         .data <- dplyr::rename(.data, birthday = birthday)
@@ -327,7 +557,7 @@ mod_cleaning_assignment_server <- function(id, state, parent) {
                         choices = c('', colnames_dfA))
       updateSelectInput(session, "city_dfA",
                         choices = c('', colnames_dfA))
-      updateSelectInput(session, "birthyear_dfA",
+      updateSelectInput(session, "SSN_dfA",
                         choices = c('', colnames_dfA))
       updateSelectInput(session, "birthday_dfA",
                         choices = c('', colnames_dfA))
@@ -352,7 +582,7 @@ mod_cleaning_assignment_server <- function(id, state, parent) {
                         choices = c('', colnames_dfB))
       updateSelectInput(session, "city_dfB",
                         choices = c('', colnames_dfB))
-      updateSelectInput(session, "birthyear_dfB",
+      updateSelectInput(session, "SSN_dfB",
                         choices = c('', colnames_dfB))
       updateSelectInput(session, "birthday_dfB",
                         choices = c('', colnames_dfB))
@@ -379,7 +609,7 @@ mod_cleaning_assignment_server <- function(id, state, parent) {
         housenum = input$housenum_dfA,
         streetname = input$streetname_dfA,
         city = input$city_dfA,
-        birthyear = input$birthyear_dfA,
+        SSN = input$SSN_dfA,
         birthday = input$birthday_dfA,
         race = input$race_dfA,
         sex = input$sex_dfA
@@ -415,7 +645,7 @@ mod_cleaning_assignment_server <- function(id, state, parent) {
         housenum = input$housenum_dfB,
         streetname = input$streetname_dfB,
         city = input$city_dfB,
-        birthyear = input$birthyear_dfB,
+        SSN = input$SSN_dfB,
         birthday = input$birthday_dfB,
         race = input$race_dfB,
         sex = input$sex_dfB

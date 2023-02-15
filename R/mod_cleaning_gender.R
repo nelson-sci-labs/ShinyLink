@@ -29,6 +29,10 @@ mod_cleaning_gender_ui <- function(id){
         status = "orange",
         solidHeader = FALSE,
         collapsible = TRUE,
+        fluidRow(
+          column(6, fileInput(ns("load_config_dfA"), NULL, buttonLabel = "Load Settings", placeholder = "Select configuration file to proceed")),
+          column(6, downloadButton(ns("save_config_dfA"), "Download Current Settings as JSON format"))
+        ),
         helpText("Assign values for Gender"),
         fluidRow(
           column(
@@ -148,6 +152,10 @@ mod_cleaning_gender_ui <- function(id){
         status = "maroon",
         solidHeader = FALSE,
         collapsible = TRUE,
+        fluidRow(
+          column(6, fileInput(ns("load_config_dfB"), NULL, buttonLabel = "Load Settings", placeholder = "Select configuration file to proceed")),
+          column(6, downloadButton(ns("save_config_dfB"), "Download Current Settings as JSON format"))
+        ),
         helpText("Assign values for Gender"),
         fluidRow(
           column(
@@ -317,10 +325,172 @@ mod_cleaning_gender_ui <- function(id){
 
 #' cleaning_gender Server Functions
 #' @importFrom shinyWidgets sendSweetAlert
+#' @importFrom jsonlite toJSON read_json
 #' @noRd
 mod_cleaning_gender_server <- function(id, state, parent){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+
+   # Save User configs -------------------------------------------------------
+    config_data_dfA <- reactive(
+      list(
+        recoding_male_a = input$recoding_male_a,
+        recoding_female_a = input$recoding_female_a,
+        recoding_transgender_a = input$recoding_transgender_a,
+
+        recoding_cauc_a = input$recoding_cauc_a,
+        recoding_afric_a = input$recoding_afric_a,
+        recoding_hisp_a = input$recoding_hisp_a,
+        recoding_asian_a = input$recoding_asian_a,
+        recoding_native_a = input$recoding_native_a,
+        recoding_mid_a = input$recoding_mid_a,
+        recoding_other_a = input$recoding_other_a
+      ))
+
+    config_data_dfB <- reactive(
+      list(
+        recoding_male_b = input$recoding_male_b,
+        recoding_female_b = input$recoding_female_b,
+        recoding_transgender_b = input$recoding_transgender_b,
+
+        recoding_cauc_b = input$recoding_cauc_b,
+        recoding_afric_b = input$recoding_afric_b,
+        recoding_hisp_b = input$recoding_hisp_b,
+        recoding_asian_b = input$recoding_asian_b,
+        recoding_native_b = input$recoding_native_b,
+        recoding_mid_b = input$recoding_mid_b,
+        recoding_other_b = input$recoding_other_b
+      ))
+
+    output$save_config_dfA <- downloadHandler(
+      filename = function() {
+        paste0("sample-gender-config-", Sys.time(), ".json")
+      },
+      content = function(file) {
+        write(toJSON(config_data_dfA()), file)
+      }
+    )
+
+    output$save_config_dfB <- downloadHandler(
+      filename = function() {
+        paste0("matching-gender-config-", Sys.time(), ".json")
+      },
+      content = function(file) {
+        write(toJSON(config_data_dfB()), file)
+      }
+    )
+
+    # Load User configs -------------------------------------------------------
+    config_dfA <- reactive({
+      infile <- input$load_config_dfA
+      if (is.null(infile)) {
+        return(NULL)
+      }
+      read_json(infile$datapath)
+    })
+
+    config_dfB <- reactive({
+      infile <- input$load_config_dfB
+      if (is.null(infile)) {
+        return(NULL)
+      }
+      read_json(infile$datapath)
+    })
+
+    observeEvent(input$load_config_dfA, {
+      req(state$dfA_cleaned_assignment)
+      loaded_config_data <- config_dfA()
+
+      if (req("sex" %in% colnames(state$dfA_cleaned_assignment))) {
+        gender_A <- gender_A_items()
+        updateSelectInput(session, "recoding_male_a",
+                          choices = c('', gender_A),
+                          selected = loaded_config_data[["recoding_male_a"]])
+        updateSelectInput(session, "recoding_female_a",
+                          choices = c('', gender_A),
+                          selected = loaded_config_data[["recoding_female_a"]])
+        updateSelectInput(session, "recoding_transgender_a",
+                          choices = c('', gender_A),
+                          selected = loaded_config_data[["recoding_transgender_a"]])
+      }
+      if (req("race" %in% colnames(state$dfA_cleaned_assignment))) {
+        race_A <- race_A_items()
+        updateSelectInput(session, "recoding_cauc_a",
+                          choices = c('', race_A),
+                          selected = loaded_config_data[["recoding_cauc_a"]])
+        updateSelectInput(session, "recoding_afric_a",
+                          choices = c('', race_A),
+                          selected = loaded_config_data[["recoding_afric_a"]])
+        updateSelectInput(session, "recoding_hisp_a",
+                          choices = c('', race_A),
+                          selected = loaded_config_data[["recoding_hisp_a"]])
+        updateSelectInput(session, "recoding_asian_a",
+                          choices = c('', race_A),
+                          selected = loaded_config_data[["recoding_asian_a"]])
+        updateSelectInput(session, "recoding_native_a",
+                          choices = c('', race_A),
+                          selected = loaded_config_data[["recoding_native_a"]])
+        updateSelectInput(session, "recoding_mid_a",
+                          choices = c('', race_A),
+                          selected = loaded_config_data[["recoding_mid_a"]])
+        updateSelectInput(session, "recoding_other_a",
+                          choices = c('', race_A),
+                          selected = loaded_config_data[["recoding_other_a"]])
+      }
+
+      # Notification
+      showNotification("User defined configuration file loaded for the Sample Data Set",
+                       type = "message")
+    })
+
+    observeEvent(input$load_config_dfB, {
+      req(state$dfB_cleaned_assignment)
+      loaded_config_data <- config_dfB()
+
+      if (req("sex" %in% colnames(state$dfB_cleaned_assignment))) {
+        gender_B <- gender_B_items()
+        updateSelectInput(session, "recoding_male_b",
+                          choices = c('', gender_B),
+                          selected = loaded_config_data[["recoding_male_b"]])
+        updateSelectInput(session, "recoding_female_b",
+                          choices = c('', gender_B),
+                          selected = loaded_config_data[["recoding_female_b"]])
+        updateSelectInput(session, "recoding_transgender_b",
+                          choices = c('', gender_B),
+                          selected = loaded_config_data[["recoding_transgender_b"]])
+      }
+      if (req("race" %in% colnames(state$dfB_cleaned_assignment))) {
+        race_B <- race_B_items()
+        updateSelectInput(session, "recoding_cauc_b",
+                          choices = c('', race_B),
+                          selected = loaded_config_data[["recoding_cauc_b"]])
+        updateSelectInput(session, "recoding_afric_b",
+                          choices = c('', race_B),
+                          selected = loaded_config_data[["recoding_afric_b"]])
+        updateSelectInput(session, "recoding_hisp_b",
+                          choices = c('', race_B),
+                          selected = loaded_config_data[["recoding_hisp_b"]])
+        updateSelectInput(session, "recoding_asian_b",
+                          choices = c('', race_B),
+                          selected = loaded_config_data[["recoding_asian_b"]])
+        updateSelectInput(session, "recoding_native_b",
+                          choices = c('', race_B),
+                          selected = loaded_config_data[["recoding_native_b"]])
+        updateSelectInput(session, "recoding_mid_b",
+                          choices = c('', race_B),
+                          selected = loaded_config_data[["recoding_mid_b"]])
+        updateSelectInput(session, "recoding_other_b",
+                          choices = c('', race_B),
+                          selected = loaded_config_data[["recoding_other_b"]])
+      }
+
+      # Notification
+      showNotification("User defined configuration file loaded for the Matching Data Set",
+                       type = "message")
+    })
+
+
+
 
     # Create reactive dropdown options ----------------------------------------
     gender_A_items <- reactive({ sort(unique(state$dfA_cleaned_assignment$sex)) })

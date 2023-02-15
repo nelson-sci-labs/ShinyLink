@@ -32,7 +32,7 @@ mod_simple_settings_ui <- function(id){
           "House Number",
           "Street Name",
           "City",
-          "Year of Birth"
+          "SSN"
         ),
         choiceValues = c(
           "firstname",
@@ -44,7 +44,7 @@ mod_simple_settings_ui <- function(id){
           "housenum",
           "streetname",
           "city",
-          "birthyear"
+          "SSN"
         ),
         selected = c(
           "firstname",
@@ -83,7 +83,7 @@ mod_simple_settings_ui <- function(id){
           "House Number",
           "Street Name",
           "City",
-          "Year of Birth"
+          "SSN"
         ),
         choiceValues = c(
           "firstname",
@@ -95,7 +95,7 @@ mod_simple_settings_ui <- function(id){
           "housenum",
           "streetname",
           "city",
-          "birthyear"
+          "SSN"
         ),
         selected = c(
           "firstname",
@@ -133,7 +133,7 @@ mod_simple_settings_ui <- function(id){
           "House Number",
           "Street Name",
           "City",
-          "Year of Birth"
+          "SSN"
         ),
         choiceValues = c(
           "firstname",
@@ -145,7 +145,7 @@ mod_simple_settings_ui <- function(id){
           "housenum",
           "streetname",
           "city",
-          "birthyear"
+          "SSN"
         ),
         status = "primary",
         size = "sm",
@@ -176,7 +176,7 @@ mod_simple_settings_ui <- function(id){
           "House Number",
           "Street Name",
           "City",
-          "Year of Birth"
+          "SSN"
         ),
         choiceValues = c(
           "firstname",
@@ -188,7 +188,7 @@ mod_simple_settings_ui <- function(id){
           "housenum",
           "streetname",
           "city",
-          "birthyear"
+          "SSN"
         ),
         selected = c("firstname",
                      "lastname"),
