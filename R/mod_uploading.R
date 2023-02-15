@@ -172,29 +172,48 @@ mod_uploading_ui <- function(id){
 
 mod_uploading_server <- function(id, state, parent){
 
-  # File uploading limit: 9MB
-  options(shiny.maxRequestSize = 9*1024^2)
+  # File uploading limit: 10 MB
+  options(shiny.maxRequestSize = 10 * 1024 ^ 2)
 
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     load_file <- function(name, path) {
       ext <- tools::file_ext(name)
-      switch(ext,
-             csv      = vroom::vroom(path, delim = ",", col_types = list()),
-             tsv      = vroom::vroom(path, delim = "\t", col_types = list()),
-             sas7bdat = haven::read_sas(path),
-             sav      = haven::read_sav(path),
-             dta      = haven::read_dta(path),
-             xlsx     = readxl::read_excel(path),
-             validate("Invalid file; Please upload a .csv or .tsv file")
-      )
+
+      if (ext == "xlsx") { df <- readxl::read_excel(path) }
+
+      if (ext == "sas7bdat") {
+        df <- haven::read_sas(path)
+        df[df == ""] <- NA
+      }
+
+      if (ext == "sav") {
+        df <- haven::read_sav(path)
+        df[df == ""] <- NA
+      }
+
+      if (ext == "dta") {
+        df <- haven::read_dta(path)
+        df[df == ""] <- NA
+      }
+
+      if (ext == "csv") {
+        df <- vroom::vroom(path, delim = ",", col_types = list())
+      }
+
+      if (ext == "tsv") {
+        df <- vroom::vroom(path, delim = "\t", col_types = list())
+      }
+
+      return(df)
     }
 
     dfA <- reactive({
       req(input$file_path_dfA)
 
       dfA <- load_file(basename(input$file_path_dfA$datapath),
-                  input$file_path_dfA$datapath)
+                       input$file_path_dfA$datapath)
+      print(dfA)
 
       state$dfA_uploaded <- dfA
       return(dfA)
@@ -204,7 +223,8 @@ mod_uploading_server <- function(id, state, parent){
       req(input$file_path_dfB)
 
       dfB <- load_file(basename(input$file_path_dfB$datapath),
-                  input$file_path_dfB$datapath)
+                       input$file_path_dfB$datapath)
+      print(dfB)
 
       state$dfB_uploaded <- dfB
       return(dfB)

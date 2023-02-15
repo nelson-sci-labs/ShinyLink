@@ -287,9 +287,11 @@ mod_manual_inspection_server <- function(id, state, parent) {
 
       if (!is.null(matched_dfs) && tibble::is_tibble(matched_dfs)) {
         if (!is.null(vals$uncertain_dfs) && nrow(vals$uncertain_dfs) > 0) {
+
+          vals$uncertain_dfs$manual_selection[vals$current_reviewing] <- 0
+
           if (vals$current_reviewing < nrow(vals$uncertain_dfs)) {
 
-            vals$uncertain_dfs$manual_selection[vals$current_reviewing] <- 0
 
             vals$current_reviewing <- vals$current_reviewing + 1
 
@@ -336,9 +338,11 @@ mod_manual_inspection_server <- function(id, state, parent) {
 
       if (!is.null(matched_dfs) && tibble::is_tibble(matched_dfs)) {
         if (!is.null(vals$uncertain_dfs) && nrow(vals$uncertain_dfs) > 0) {
+
+          vals$uncertain_dfs$manual_selection[vals$current_reviewing] <- 1
+
           if (vals$current_reviewing < nrow(vals$uncertain_dfs)) {
 
-            vals$uncertain_dfs$manual_selection[vals$current_reviewing] <- 1
 
             vals$current_reviewing <- vals$current_reviewing + 1
 
@@ -385,9 +389,11 @@ mod_manual_inspection_server <- function(id, state, parent) {
 
       if (!is.null(matched_dfs) && tibble::is_tibble(matched_dfs)) {
         if (!is.null(vals$uncertain_dfs) && nrow(vals$uncertain_dfs) > 0) {
+
+          vals$uncertain_dfs$manual_selection[vals$current_reviewing] <- NA
+
           if (vals$current_reviewing < nrow(vals$uncertain_dfs)) {
 
-            vals$uncertain_dfs$manual_selection[vals$current_reviewing] <- NA
 
             vals$current_reviewing <- vals$current_reviewing + 1
 
@@ -466,6 +472,7 @@ mod_manual_inspection_server <- function(id, state, parent) {
               SSN_dfA        = currentA[["SSN"]],
               SSN_dfB        = currentB[["SSN"]]
             )
+            state$matched_results[['matched_intersect']]
 
             state$matched_results[['matched_intersect']] <- dplyr::bind_rows(
               vals$uncertain_dfs, vals$certain_dfs)

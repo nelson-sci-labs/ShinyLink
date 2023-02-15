@@ -380,36 +380,8 @@ mod_simple_results_server <- function(id, state, parent){
       dfA <- state$state_dfA
       dfB <- state$state_dfB
 
-      # Testing only
-      # dfA <- readxl::read_excel('inst/app/www/lkselectedrecs_cleaned.xlsx')
-      # dfB <- readxl::read_excel('inst/app/www/redcapoutput_cleaned.xlsx')
-      # dfA <- readxl::read_excel('inst/app/www/Unique in Sample Data Set.xlsx')
-      # dfB <- readxl::read_excel('inst/app/www/Unique in Matching Data Set.xlsx')
-      # matches.out <- fastLink::fastLink(
-      #   dfA = dfA, dfB = dfB,
-      #   varnames = c("firstname", "middlename", "lastname", "race", "sex"),
-      #   # stringdist.match = c("firstname", "middlename", "lastname", "race", "sex"),
-      #   # numeric.match =
-      #   # partial.match = c("firstname", "lastname"),
-      #   n.cores = 1
-      # )
-
-      # dfA <- readxl::read_excel('inst/app/www/lkselectedrecs_cleaned.xlsx')
-      # dfA$birthday <- as.character(dfA$birthday)
-      # dfB <- readxl::read_excel('inst/app/www/redcapoutput_cleaned.xlsx')
-      # dfB$birthday <- as.character(dfB$birthday)
-      # matches.out <- fastLink::fastLink(
-      #   dfA = dfA, dfB = dfB,
-      #   # varnames = c("firstname", "middlename", "lastname"),
-      #   # stringdist.match = c("firstname", "middlename", "lastname"),
-      #   varnames = c("firstname", "middlename", "lastname", "birthday", "race", "sex"),
-      #   stringdist.match = c("firstname", "middlename", "lastname", "birthday", "race", "sex"),
-      #   # numeric.match =
-      #   partial.match = c("firstname", "middlename", "lastname", "birthday", "race", "sex"),
-      #   n.cores = 1
-      # )
-
-      # End of testing code
+      # TODO Remove
+      print(state$matching_variables)
 
       matches.out <- fastLink::fastLink(
         dfA = dfA,
@@ -418,6 +390,8 @@ mod_simple_results_server <- function(id, state, parent){
         stringdist.match = state$string_matching,
         numeric.match = state$numeric_matching,
         partial.match = state$partial_matching
+        # cut.a = 0.9,
+        # cut.p = 0.8
       )
 
       # print(length(matches.out$matches$inds.a))
@@ -446,6 +420,7 @@ mod_simple_results_server <- function(id, state, parent){
 
       if (length(matches.out$matches$inds.a) != 0) {
 
+        # print(dfA)
         dfA.match <- dfA[matches.out$matches$inds.a, ]
         dfA.unmatch <- dfA[-matches.out$matches$inds.a, ]
         dfB.match <- dfB[matches.out$matches$inds.b, ]
@@ -456,10 +431,10 @@ mod_simple_results_server <- function(id, state, parent){
           dfA = dfA,
           dfB = dfB,
           fl.out = matches.out,
-          threshold.match = 0.85
+          threshold.match = 0.75
         )
         matched_dfs <- tibble::as_tibble(matched_dfs)
-
+        print(matched_dfs)
         # Get the column IDs with "gamma" and
         # colnames(matched_dfs)[grep("gamma", colnames(matched_dfs))] <- state$matching_variables
         # match_status codes: 2 = Exact, 1 = Partial, 0 = Different, NA = No data from both side

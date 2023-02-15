@@ -30,7 +30,7 @@ mod_cleaning_gender_ui <- function(id){
         solidHeader = FALSE,
         collapsible = TRUE,
         fluidRow(
-          column(6, fileInput(ns("load_config_dfA"), NULL, buttonLabel = "Load Settings", placeholder = "Select configuration file to proceed")),
+          column(6, fileInput(ns("load_config_dfA"), NULL, buttonLabel = "Load Settings", placeholder = "Select configuration file to proceed"), accept = ".json"),
           column(6, downloadButton(ns("save_config_dfA"), "Download Current Settings as JSON format"))
         ),
         helpText("Assign values for Gender"),
@@ -153,7 +153,7 @@ mod_cleaning_gender_ui <- function(id){
         solidHeader = FALSE,
         collapsible = TRUE,
         fluidRow(
-          column(6, fileInput(ns("load_config_dfB"), NULL, buttonLabel = "Load Settings", placeholder = "Select configuration file to proceed")),
+          column(6, fileInput(ns("load_config_dfB"), NULL, buttonLabel = "Load Settings", placeholder = "Select configuration file to proceed"), accept = ".json"),
           column(6, downloadButton(ns("save_config_dfB"), "Download Current Settings as JSON format"))
         ),
         helpText("Assign values for Gender"),
@@ -383,18 +383,45 @@ mod_cleaning_gender_server <- function(id, state, parent){
     # Load User configs -------------------------------------------------------
     config_dfA <- reactive({
       infile <- input$load_config_dfA
+      ext <- tools::file_ext(infile$datapath)
       if (is.null(infile)) {
         return(NULL)
       }
-      read_json(infile$datapath)
+      if (ext == "json") {
+        return(read_json(infile$datapath))
+        # Notification
+        showNotification("User defined configuration file loaded for the Sample Data Set",
+                         type = "message")
+      } else {
+        # If the file type is not valid, show an error message
+        showModal(modalDialog(
+          title = "Error",
+          "Please upload a valid JSON configuration file.",
+          easyClose = TRUE
+        ))
+      }
     })
 
     config_dfB <- reactive({
       infile <- input$load_config_dfB
+      ext <- tools::file_ext(infile$datapath)
+
       if (is.null(infile)) {
         return(NULL)
       }
-      read_json(infile$datapath)
+      if (ext == "json") {
+        return(read_json(infile$datapath))
+        # Notification
+        showNotification("User defined configuration file loaded for the Matching Data Set",
+                         type = "message")
+      } else {
+        # If the file type is not valid, show an error message
+        showModal(modalDialog(
+          title = "Error",
+          "Please upload a valid JSON configuration file.",
+          easyClose = TRUE
+        ))
+      }
     })
 
     observeEvent(input$load_config_dfA, {
@@ -437,10 +464,6 @@ mod_cleaning_gender_server <- function(id, state, parent){
                           choices = c('', race_A),
                           selected = loaded_config_data[["recoding_other_a"]])
       }
-
-      # Notification
-      showNotification("User defined configuration file loaded for the Sample Data Set",
-                       type = "message")
     })
 
     observeEvent(input$load_config_dfB, {
@@ -483,10 +506,6 @@ mod_cleaning_gender_server <- function(id, state, parent){
                           choices = c('', race_B),
                           selected = loaded_config_data[["recoding_other_b"]])
       }
-
-      # Notification
-      showNotification("User defined configuration file loaded for the Matching Data Set",
-                       type = "message")
     })
 
 

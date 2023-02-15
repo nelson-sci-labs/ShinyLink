@@ -1,5 +1,10 @@
 # Create develop environment for simple match and manual inspection
 library(magrittr)
+# dfA <- haven::read_sas('inst/app/www/lkselectedrecs.sas7bdat')
+# dfA[dfA == ""] <- NA
+
+# dfA <- vroom::vroom('inst/app/www/lkselectedrecs.csv', delim = ",", col_types = list())
+# dfA[dfA == ""] <- NA
 
 dfA <- readxl::read_excel('inst/app/www/lkselectedrecs_cleaned.xlsx')
 dfA$birthday <- as.character(dfA$birthday)
