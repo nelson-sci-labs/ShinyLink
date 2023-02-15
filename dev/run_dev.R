@@ -20,13 +20,14 @@ run_app()
 # https://fontawesome.com/v4/icons/
 
 
-# TODO
-# [ ] - 1. Able to download the uncertainty table in manual review module.
-# [x] - 2. Allow all upper/lower case.
-# [x] - 3. Add save and load settings for variable assignment.
-# [x] - 4. Add save and load settings for gender/race re-coding.
-# [ ] - 5. Add finding duplicates within a data set.
-# [ ] - 6. Add functionality to download all results together.
-# [ ] - 7. Question for CDC, do they need blocking? What is the maximum size of data set that they have in their workflow.
-# [x] - 8. Add calculation of levels of uncertainty module.
-# [x] - 9. Add manual inspection module, allow users to decide level of uncertainty before review matches.
+# TODO New features and bug fixes
+# [ ] - 01. Able to download the uncertainty table in manual review module.
+# [x] - 02. Allow all upper/lower case.
+# [x] - 03. Add save and load settings for variable assignment.
+# [x] - 04. Add save and load settings for gender/race re-coding.
+# [ ] - 05. Add finding duplicates within a data set.
+# [ ] - 06. Add functionality to download all results together.
+# [ ] - 07. Question for CDC, do they need blocking? What is the maximum size of data set that they have in their workflow.
+# [x] - 08. Add calculation of levels of uncertainty module.
+# [x] - 09. Add manual inspection module, allow users to decide level of uncertainty before review matches.
+# [x] - 10. Fix the issue that different data input format generates different matching results

@@ -97,6 +97,13 @@ mod_manual_inspection_ui <- function(id) {
                actionButton(ns("next_row"),"Next Row", icon = icon("chevron-right"), class = "btn-info", width = "150px")
         )
       )
+    ),
+
+    box(
+      width = 12,
+      title = "Uncertainty Matches",
+      status = "success",
+      column(12, DT::dataTableOutput(ns('uncertainty_matches')))
     )
   )
 }
@@ -527,6 +534,36 @@ mod_manual_inspection_server <- function(id, state, parent) {
         }
       }
     })
+
+    output[["uncertainty_matches"]] <- DT::renderDataTable(
+      vals$uncertain_dfs,
+      caption = 'uncertainty_matches',
+      extensions = 'Buttons',
+      selection = "multiple",
+      rownames = FALSE,
+      server = FALSE,
+      options = list(
+        autoWidth = FALSE,
+        scrollX = TRUE,
+        lengthMenu = list(c(5, 20, 50, -1), c('default', '20', '50', 'All')),
+        pageLength = 5,
+        dom = 'Blfrtip',
+        buttons = list(
+          'copy',
+          list(
+            extend = 'collection',
+            buttons = list(
+              list(extend = 'csv', filename = "Uncertainty matches"),
+              list(extend = 'excel', filename = "Uncertainty matches")
+            ),
+            text = 'Download'
+          )
+        )
+      ),
+      class = 'compact hover row-border nowrap stripe'
+    )
+
+
   })
 }
 
