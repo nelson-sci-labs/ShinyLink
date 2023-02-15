@@ -50,7 +50,7 @@ mod_simple_settings_ui <- function(id){
           "firstname",
           "middlename",
           "lastname",
-          # "birthday",
+          "birthday",
           "race",
           "sex"
         ),
@@ -101,6 +101,7 @@ mod_simple_settings_ui <- function(id){
           "firstname",
           "middlename",
           "lastname",
+          "birthday",
           "race",
           "sex"
         ),
@@ -191,7 +192,9 @@ mod_simple_settings_ui <- function(id){
           "SSN"
         ),
         selected = c("firstname",
-                     "lastname"),
+                     "middlename",
+                     "lastname",
+                     "birthday"),
         status = "primary",
         size = "sm",
         justified = TRUE,
