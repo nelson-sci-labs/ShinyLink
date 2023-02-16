@@ -21,11 +21,11 @@ run_app()
 
 
 # TODO New features and bug fixes
-# [ ] - 01. Able to download the uncertainty table in manual review module.
+# [x] - 01. Able to download the uncertainty table in manual review module.
 # [x] - 02. Allow all upper/lower case.
 # [x] - 03. Add save and load settings for variable assignment.
 # [x] - 04. Add save and load settings for gender/race re-coding.
-# [ ] - 05. Add finding duplicates within a data set.
+# [x] - 05. Do we need finding duplicates within a data set? No
 # [ ] - 06. Add functionality to download all results together.
 # [ ] - 07. Question for CDC, do they need blocking? What is the maximum size of data set that they have in their workflow.
 # [x] - 08. Add calculation of levels of uncertainty module.

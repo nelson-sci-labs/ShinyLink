@@ -331,7 +331,7 @@ mod_manual_inspection_server <- function(id, state, parent) {
             )
 
             state$matched_results[['matched_intersect']] <- dplyr::bind_rows(
-              vals$uncertain_dfs, vals$certain_dfs)
+              vals$uncertain_dfs %>% dplyr::filter(manual_selection == 1), vals$certain_dfs)
           }
         }
       }
@@ -382,7 +382,7 @@ mod_manual_inspection_server <- function(id, state, parent) {
             )
 
             state$matched_results[['matched_intersect']] <- dplyr::bind_rows(
-              vals$uncertain_dfs, vals$certain_dfs)
+              vals$uncertain_dfs %>% dplyr::filter(manual_selection == 1), vals$certain_dfs)
           }
         }
       }
@@ -433,8 +433,7 @@ mod_manual_inspection_server <- function(id, state, parent) {
             )
 
             state$matched_results[['matched_intersect']] <- dplyr::bind_rows(
-              vals$uncertain_dfs, vals$certain_dfs)
-
+              vals$uncertain_dfs %>% dplyr::filter(manual_selection == 1), vals$certain_dfs)
           }
         }
       }
@@ -482,7 +481,7 @@ mod_manual_inspection_server <- function(id, state, parent) {
             state$matched_results[['matched_intersect']]
 
             state$matched_results[['matched_intersect']] <- dplyr::bind_rows(
-              vals$uncertain_dfs, vals$certain_dfs)
+              vals$uncertain_dfs %>% dplyr::filter(manual_selection == 1), vals$certain_dfs)
           }
         }
       }
@@ -529,7 +528,7 @@ mod_manual_inspection_server <- function(id, state, parent) {
             )
 
             state$matched_results[['matched_intersect']] <- dplyr::bind_rows(
-              vals$uncertain_dfs, vals$certain_dfs)
+              vals$uncertain_dfs %>% dplyr::filter(manual_selection == 1), vals$certain_dfs)
           }
         }
       }

@@ -516,6 +516,7 @@ mod_simple_results_server <- function(id, state, parent){
           dfA.unmatch = dfA.unmatch,
           dfB.match = dfB.match,
           dfB.unmatch = dfB.unmatch,
+          matched_intersect = matched_dfs,
           matched_union = dplyr::bind_rows(matched_dfs, dfA.unmatch, dfB.unmatch)
         )
         state$matched_results <- matched_results
@@ -606,92 +607,62 @@ mod_simple_results_server <- function(id, state, parent){
     )
 
     # Update matched results based on selection -------------------------------
-
-    observe({
-      if (!is.null(input[["matched_rows_selected"]])) {
-        matched_rows_selected <- input[["matched_rows_selected"]] + 1
-
-        state$matched_results[['matched_intersect']] <-
-          matched_values()[['Dat']][matched_rows_selected, ] %>%
-          dplyr::select(-tidyselect::any_of(c('details')))
-
-        matches.out <- state$matched_results[['matches.out']]
-
-        # Testing only
-        # dfA <- readxl::read_excel('inst/app/www/lkselectedrecs_cleaned.xlsx')
-        # dfA$birthday <- as.character(dfA$birthday)
-        # dfB <- readxl::read_excel('inst/app/www/redcapoutput_cleaned.xlsx')
-        # dfB$birthday <- as.character(dfB$birthday)
-        #
-        # # matched_rows_selected <- c(1, 2, 3, 7)
-        #
-        # matches.out <- fastLink::fastLink(
-        #   dfA = dfA, dfB = dfB,
-        #   # varnames = c("firstname", "middlename", "lastname"),
-        #   # stringdist.match = c("firstname", "middlename", "lastname"),
-        #   varnames = c("firstname", "middlename", "lastname", "birthday", "race", "sex"),
-        #   stringdist.match = c("firstname", "middlename", "lastname", "birthday", "race", "sex"),
-        #   # numeric.match =
-        #   partial.match = c("firstname", "middlename", "lastname", "birthday", "race", "sex"),
-        #   n.cores = 1
-        # )
-        #
-        # summary(matches.out)
-        #
-        # matched_dfs <- fastLink::getMatches(
-        #   dfA = dfA,
-        #   dfB = dfB,
-        #   fl.out = matches.out,
-        #   threshold.match = 0.85,
-        #   combine.dfs = TRUE
-        # )
-        # End of testing zone
-
-        dfA <- state$state_dfA
-        dfB <- state$state_dfB
-
-        matches.out.manual <- matches.out
-        matches.out.manual$matches <- matches.out$matches[matched_rows_selected, ]
-        matches.out.manual$patterns <- matches.out$patterns[matched_rows_selected, ]
-        matches.out.manual$posterior <- matches.out$posterior[matched_rows_selected]
-
-        dfA.match <- dfA[matches.out.manual$matches$inds.a, ]
-        dfA.unmatch <- dfA[-matches.out.manual$matches$inds.a, ]
-        dfB.match <- dfB[matches.out.manual$matches$inds.b, ]
-        dfB.unmatch <- dfB[-matches.out.manual$matches$inds.b, ]
-
-        matched_dfs <- fastLink::getMatches(
-          dfA = dfA,
-          dfB = dfB,
-          fl.out = matches.out.manual,
-          threshold.match = 0.85,
-          combine.dfs = TRUE
-        )
-
-
-        # TODO needs to be updated
-        matched_dfs <- matched_dfs %>%
-          dplyr::select(-tidyselect::any_of(
-            c(
-              'gamma.1',
-              'gamma.2',
-              'gamma.3',
-              'gamma.4',
-              'gamma.5',
-              'gamma.6',
-              'posterior'
-            )
-          ))
-
-        state$matched_results[['matched_union']] <- dplyr::bind_rows(matched_dfs, dfA.unmatch, dfB.unmatch)
-        state$matched_results[['dfA.unmatch']] <- dfA.unmatch
-        state$matched_results[['dfB.unmatch']] <- dfB.unmatch
-
-      } else {
-        state$matched_results[['matched_intersect']] <-
-          dplyr::as_tibble(matched_values()[['Dat']])
-      }
-    })
+    # Disabled
+    # observe({
+    #   if (!is.null(input[["matched_rows_selected"]])) {
+    #     matched_rows_selected <- input[["matched_rows_selected"]] + 1
+    #
+    #     state$matched_results[['matched_intersect']] <-
+    #       matched_values()[['Dat']][matched_rows_selected, ] %>%
+    #       dplyr::select(-tidyselect::any_of(c('details')))
+    #
+    #     matches.out <- state$matched_results[['matches.out']]
+    #
+    #     dfA <- state$state_dfA
+    #     dfB <- state$state_dfB
+    #
+    #     matches.out.manual <- matches.out
+    #     matches.out.manual$matches <- matches.out$matches[matched_rows_selected, ]
+    #     matches.out.manual$patterns <- matches.out$patterns[matched_rows_selected, ]
+    #     matches.out.manual$posterior <- matches.out$posterior[matched_rows_selected]
+    #
+    #     dfA.match <- dfA[matches.out.manual$matches$inds.a, ]
+    #     dfA.unmatch <- dfA[-matches.out.manual$matches$inds.a, ]
+    #     dfB.match <- dfB[matches.out.manual$matches$inds.b, ]
+    #     dfB.unmatch <- dfB[-matches.out.manual$matches$inds.b, ]
+    #
+    #     matched_dfs <- fastLink::getMatches(
+    #       dfA = dfA,
+    #       dfB = dfB,
+    #       fl.out = matches.out.manual,
+    #       threshold.match = 0.85,
+    #       combine.dfs = TRUE
+    #     )
+    #
+    #
+    #     # TODO needs to be updated
+    #     matched_dfs <- matched_dfs %>%
+    #       dplyr::select(-tidyselect::any_of(
+    #         c(
+    #           'gamma.1',
+    #           'gamma.2',
+    #           'gamma.3',
+    #           'gamma.4',
+    #           'gamma.5',
+    #           'gamma.6',
+    #           'posterior'
+    #         )
+    #       ))
+    #
+    #     state$matched_results[['matched_union']] <- dplyr::bind_rows(matched_dfs, dfA.unmatch, dfB.unmatch)
+    #     state$matched_results[['dfA.unmatch']] <- dfA.unmatch
+    #     state$matched_results[['dfB.unmatch']] <- dfB.unmatch
+    #
+    #   } else {
+    #     state$matched_results[['matched_intersect']] <-
+    #       dplyr::as_tibble(matched_values()[['Dat']])
+    #   }
+    # })
 
 
 
