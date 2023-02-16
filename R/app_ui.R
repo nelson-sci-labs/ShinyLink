@@ -26,7 +26,7 @@ app_ui <- function(request) {
       title = "ShinyLink",
       # Header -----------------------------------------------------------------
       header = dashboardHeader(
-        title = "ShinyLink Ver 0.4.2",
+        title = "ShinyLink Ver 0.5.0",
         leftUi = tagList(
           dropdownBlock(
             id = "mydropdown",
@@ -132,14 +132,14 @@ app_ui <- function(request) {
               icon = icon("square-poll-vertical")
             ),
             menuSubItem(
-              "Manual Inspection",
-              tabName = "manual_inspection",
-              icon = icon("user-plus")
-            ),
-            menuSubItem(
               "Matching Details",
               tabName = "simple_details",
               icon = icon("download")
+            ),
+            menuSubItem(
+              "Manual Inspection",
+              tabName = "manual_inspection",
+              icon = icon("user-plus")
             )
           ),
           menuItem(

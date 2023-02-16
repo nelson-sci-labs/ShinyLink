@@ -26,7 +26,7 @@ run_app()
 # [x] - 03. Add save and load settings for variable assignment.
 # [x] - 04. Add save and load settings for gender/race re-coding.
 # [x] - 05. Do we need finding duplicates within a data set? No
-# [ ] - 06. Add functionality to download all results together.
+# [x] - 06. Add functionality to download all results together.
 # [ ] - 07. Question for CDC, do they need blocking? What is the maximum size of data set that they have in their workflow.
 # [x] - 08. Add calculation of levels of uncertainty module.
 # [x] - 09. Add manual inspection module, allow users to decide level of uncertainty before review matches.

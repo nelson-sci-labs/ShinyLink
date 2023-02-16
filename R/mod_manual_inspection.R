@@ -14,10 +14,7 @@ mod_manual_inspection_ui <- function(id) {
       width = 12,
       title = "Manual Inspection",
       status = "success",
-      actionButton(ns("show"), "Show Manual Inspection dialog"),
-      # verbatimTextOutput(ns("dataInfo")),
-
-      p("Row #1 of 1 records with filters applied")
+      actionButton(ns("show"), "Show Manual Inspection dialog", class = "btn-primary")
     ),
 
     box(
@@ -74,7 +71,9 @@ mod_manual_inspection_ui <- function(id) {
       status = "success",
       solidHeader = FALSE,
       collapsible = FALSE,
-      h4("Control Zone"),
+
+      textOutput(ns("my_text")),
+      p('Your decision regarding this possible match will be recorded for these observations in a new variable called "manual_review"'),
       fluidRow(
         column(
         width = 4,
@@ -104,6 +103,18 @@ mod_manual_inspection_ui <- function(id) {
       title = "Uncertainty Matches",
       status = "success",
       column(12, DT::dataTableOutput(ns('uncertainty_matches')))
+    ),
+    box(
+      width = 12,
+      title = "Confirmed Matches",
+      status = "success",
+      column(12, DT::dataTableOutput(ns('confirmed_matches')))
+    ),
+    box(
+      width = 12,
+      title = "Confirmed Non-Matches",
+      status = "success",
+      column(12, DT::dataTableOutput(ns('confirmed_non_matches')))
     )
   )
 }
@@ -156,6 +167,19 @@ mod_manual_inspection_server <- function(id, state, parent) {
                            choose_level = 3,
                            uncertain_dfs = NULL,
                            certain_dfs = NULL)
+
+    output$my_text <- renderText({
+      my_text <-
+        paste0(
+          "Row #",
+          vals$current_reviewing,
+          " of ",
+          nrow(vals$uncertain_dfs),
+          " records with filters applied"
+        )
+      strong_text <- paste0("<strong>", my_text, "</strong>")
+      HTML(strong_text)
+    })
 
     level_statistics <- reactive({
       # Production mode
@@ -534,8 +558,82 @@ mod_manual_inspection_server <- function(id, state, parent) {
       }
     })
 
+    uncertainty_matches <- reactive({
+      if (!is.null(vals$uncertain_dfs)){
+        vals$uncertain_dfs %>% dplyr::filter(is.na(manual_selection))
+      } else {NULL}
+    })
+
     output[["uncertainty_matches"]] <- DT::renderDataTable(
-      vals$uncertain_dfs,
+      uncertainty_matches(),
+      caption = 'uncertainty_matches',
+      extensions = 'Buttons',
+      selection = "multiple",
+      rownames = FALSE,
+      server = FALSE,
+      options = list(
+        autoWidth = FALSE,
+        scrollX = TRUE,
+        lengthMenu = list(c(5, 20, 50, -1), c('default', '20', '50', 'All')),
+        pageLength = 5,
+        dom = 'Blfrtip',
+        buttons = list(
+          'copy',
+          list(
+            extend = 'collection',
+            buttons = list(
+              list(extend = 'csv', filename = "Uncertainty matches"),
+              list(extend = 'excel', filename = "Uncertainty matches")
+            ),
+            text = 'Download'
+          )
+        )
+      ),
+      class = 'compact hover row-border nowrap stripe'
+    )
+
+    confirmed_matches <- reactive({
+      if (!is.null(vals$uncertain_dfs)){
+        vals$uncertain_dfs %>% dplyr::filter(manual_selection == 0)
+      } else {NULL}
+    })
+
+    output[["confirmed_matches"]] <- DT::renderDataTable(
+      confirmed_matches(),
+      caption = 'uncertainty_matches',
+      extensions = 'Buttons',
+      selection = "multiple",
+      rownames = FALSE,
+      server = FALSE,
+      options = list(
+        autoWidth = FALSE,
+        scrollX = TRUE,
+        lengthMenu = list(c(5, 20, 50, -1), c('default', '20', '50', 'All')),
+        pageLength = 5,
+        dom = 'Blfrtip',
+        buttons = list(
+          'copy',
+          list(
+            extend = 'collection',
+            buttons = list(
+              list(extend = 'csv', filename = "Uncertainty matches"),
+              list(extend = 'excel', filename = "Uncertainty matches")
+            ),
+            text = 'Download'
+          )
+        )
+      ),
+      class = 'compact hover row-border nowrap stripe'
+    )
+
+    confirmed_non_matches <- reactive({
+      if (!is.null(vals$uncertain_dfs)){
+        vals$uncertain_dfs %>% dplyr::filter(manual_selection == 0)
+      } else {NULL}
+    })
+
+    output[["confirmed_non_matches"]] <- DT::renderDataTable(
+      confirmed_non_matches(),
       caption = 'uncertainty_matches',
       extensions = 'Buttons',
       selection = "multiple",
