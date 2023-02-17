@@ -62,6 +62,8 @@ usethis::use_package("purrr", min_version = TRUE, type = "Suggests")
 
 usethis::use_package("readxl", min_version = TRUE)
 usethis::use_package("shiny")
+usethis::use_package("shinyjs")
+
 usethis::use_package("shinybusy")
 
 usethis::use_package("shinydashboard", min_version = TRUE)

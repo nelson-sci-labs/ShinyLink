@@ -22,11 +22,10 @@ app_ui <- function(request) {
       options = list(sidebarExpandOnHover = TRUE),
       # controlbar = dashboardControlbar(),
       controlbar = dashboardControlbar(collapsed = TRUE, skinSelector()),
-
       title = "ShinyLink",
       # Header -----------------------------------------------------------------
       header = dashboardHeader(
-        title = "ShinyLink Ver 0.5.0",
+        title = "ShinyLink Ver 0.5.1",
         leftUi = tagList(
           dropdownBlock(
             id = "mydropdown",
@@ -45,6 +44,25 @@ app_ui <- function(request) {
               label_off = "NAs removed",
               icon_on = icon("check"),
               icon_off = icon("trash-can")
+            )
+          ),
+          dropdownBlock(
+            id = "mydropdown3",
+            title = "Advanced options",
+            icon = icon("sliders"),
+            prettySwitch(
+              inputId = "switch5",
+              label = "Fill switch with status:",
+              fill = TRUE,
+              status = "primary"
+            ),
+            prettyCheckboxGroup(
+              inputId = "checkgroup6",
+              label = "Click me!",
+              thick = TRUE,
+              choices = c("Click me !", "Me !", "Or me !"),
+              animation = "pulse",
+              status = "info"
             )
           ),
           dropdownBlock(
@@ -175,6 +193,7 @@ app_ui <- function(request) {
       ),
       # Body -------------------------------------------------------------------
       body = dashboardBody(
+        shinyjs::useShinyjs(),
         tabItems(
           tabItem(tabName = "upload",
                   mod_uploading_ui("uploading")),

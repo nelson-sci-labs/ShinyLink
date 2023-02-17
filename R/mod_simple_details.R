@@ -71,20 +71,20 @@ mod_simple_details_ui <- function(id) {
         style = "margin-bottom: 10px;",
         style = "margin-top: -10px;"
       ),
-      # column(
-      #   width = 6,
-      #   actionBttn(
-      #     inputId = ns("next_advanced_parameters"),
-      #     label = "Next: Advanced Parameters",
-      #     style = "simple",
-      #     color = "primary",
-      #     icon = icon("arrow-right"),
-      #     size = "sm"
-      #   ),
-      #   align = "right",
-      #   style = "margin-bottom: 10px;",
-      #   style = "margin-top: -10px;"
-      # ),
+      column(
+        width = 6,
+        actionBttn(
+          inputId = ns("next_manual_inspection"),
+          label = "Next: Manual Inspection",
+          style = "simple",
+          color = "primary",
+          icon = icon("arrow-right"),
+          size = "sm"
+        ),
+        align = "right",
+        style = "margin-bottom: 10px;",
+        style = "margin-top: -10px;"
+      ),
       style = "margin-left: 0px;",
       style = "margin-right: 0px;"
     )
@@ -213,6 +213,11 @@ mod_simple_details_server <- function(id, state, parent) {
     # Previous page button redirection
     observeEvent(input$previous_simple_results, {
       updateTabItems(session = parent, "tabs", "simple_results")
+    })
+
+    # Next page button redirection
+    observeEvent(input$next_manual_inspection, {
+      updateTabItems(session = parent, "tabs", "manual_inspection")
     })
 
   })

@@ -454,9 +454,9 @@ mod_simple_results_server <- function(id, state, parent){
         name_matching_fields <- colnames(matched_dfs)[grep("match_status_", colnames(matched_dfs))]
         matched_dfs <- matched_dfs %>% dplyr::mutate(sum_match = rowSums(dplyr::across(name_matching_fields), na.rm=TRUE))
 
-        # Initialize the manual_selection and set to NA = Undecided by default
+        # Initialize the Decision and set to NA = Undecided by default
         # 1 = Same Person, 0 = Different Person, NA = Undecided
-        matched_dfs <- matched_dfs %>% dplyr::mutate(manual_selection = NA)
+        matched_dfs <- matched_dfs %>% dplyr::mutate(Decision = "Undecided")
 
         # Calculate levels of match
         matched_dfs <- set_match_levels(matched_dfs)
@@ -513,11 +513,15 @@ mod_simple_results_server <- function(id, state, parent){
           matched_summary = matched_summary,
           matched_dfs = matched_dfs,
           dfA.match = dfA.match,
-          dfA.unmatch = dfA.unmatch,
+          dfA.unmatch = dfA.unmatch,  # Dynamic value for display
           dfB.match = dfB.match,
-          dfB.unmatch = dfB.unmatch,
-          matched_intersect = matched_dfs,
-          matched_union = dplyr::bind_rows(matched_dfs, dfA.unmatch, dfB.unmatch)
+          dfB.unmatch = dfB.unmatch,   # Dynamic value for display
+          matched_intersect = matched_dfs, # Dynamic value for display
+          matched_union = dplyr::bind_rows(matched_dfs, dfA.unmatch, dfB.unmatch), # Dynamic value for display
+
+          matched_dfs_review = matched_dfs, # Persistent value for manual review only
+          dfA.unmatch_review = dfA.unmatch, # Persistent value for manual review only
+          dfB.unmatch_review = dfB.unmatch  # Persistent value for manual review only
         )
         state$matched_results <- matched_results
         return(matched_results)

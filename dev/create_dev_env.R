@@ -38,7 +38,7 @@ colnames(matched_dfs)[colnames(matched_dfs) == "posterior"] <- "posterior_score"
 name_matching_fields <- colnames(matched_dfs)[grep("match_status_", colnames(matched_dfs))]
 matched_dfs <- matched_dfs %>% dplyr::mutate(sum_match = rowSums(dplyr::across(name_matching_fields), na.rm=TRUE))
 
-matched_dfs <- matched_dfs %>% dplyr::mutate(manual_selection = NA)
+matched_dfs <- matched_dfs %>% dplyr::mutate(Decision = NA)
 
 matched_dfs <- set_match_levels(matched_dfs)
 
