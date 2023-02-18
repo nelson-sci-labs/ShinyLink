@@ -12,7 +12,7 @@
 #' @noRd
 app_ui <- function(request) {
   tagList(
-    shinybusy::add_busy_bar(color = "#00a65a", height = "6px" ),
+    shinybusy::add_busy_bar(color = "#00a65a", height = "8px" ),
 
     # Leave this function for adding external resources
     golem_add_external_resources(),
@@ -25,7 +25,7 @@ app_ui <- function(request) {
       title = "ShinyLink",
       # Header -----------------------------------------------------------------
       header = dashboardHeader(
-        title = "ShinyLink Ver 0.5.1",
+        title = "ShinyLink Ver 0.5.2",
         leftUi = tagList(
           dropdownBlock(
             id = "mydropdown",
@@ -103,6 +103,7 @@ app_ui <- function(request) {
       sidebar = dashboardSidebar(
         minified = TRUE,
         collapsed = FALSE,
+
         sidebarMenu(
           id = "tabs",
           menuItem(
@@ -184,7 +185,6 @@ app_ui <- function(request) {
             #   tabName = "advanced_results",
             #   icon = icon("hard-drive")
             # ),
-
           )
         )
         # mod_sidebar_ui("mod_sidebar") # Not as a sidebar module for now

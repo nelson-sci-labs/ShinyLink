@@ -245,8 +245,6 @@ mod_simple_settings_server <- function(id, state, parent){
     ns <- session$ns
 
     observe({
-
-
       state$matching_variables <- input$matching_variables
       state$string_matching <- input$string_matching
       state$numeric_matching <- input$numeric_matching

@@ -19,7 +19,7 @@ mod_simple_details_ui <- function(id) {
         status = "success",
         solidHeader = FALSE,
         collapsible = FALSE,
-        column(12, DT::dataTableOutput(ns('matched_dfA')))
+        column(12, DT::dataTableOutput(ns('matched_union')))
       )
     )),
     fluidRow(column(
@@ -30,7 +30,7 @@ mod_simple_details_ui <- function(id) {
         status = "success",
         solidHeader = FALSE,
         collapsible = FALSE,
-        column(12, DT::dataTableOutput(ns('matched_dfB')))
+        column(12, DT::dataTableOutput(ns('matched_intersect')))
       )
     )),
     br(),
@@ -97,7 +97,7 @@ mod_simple_details_ui <- function(id) {
 mod_simple_details_server <- function(id, state, parent) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    output[["matched_dfA"]] <- DT::renderDataTable(
+    output[["matched_union"]] <- DT::renderDataTable(
       state$matched_results[['matched_union']],
       caption = 'Linked Data',
       extensions = 'Buttons',
@@ -126,7 +126,7 @@ mod_simple_details_server <- function(id, state, parent) {
     )
 
 
-    output[["matched_dfB"]] <- DT::renderDataTable(
+    output[["matched_intersect"]] <- DT::renderDataTable(
       state$matched_results[['matched_intersect']],
       caption = 'Confirmed Matches',
       extensions = 'Buttons',

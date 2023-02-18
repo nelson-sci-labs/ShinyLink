@@ -1,6 +1,6 @@
 Package: ShinyLink
 Title: 'Shiny' Based Record Linkage Tool
-Version: 0.5.1
+Version: 0.5.2
 Authors@R: c(
     person("Shufu", "Chen", role = c("aut"), email = "shufuchen@nelsonscilabs.com"),       
     person("John", "Tyburski", role = c("aut"), email = "jtyburski@nelsonscilabs.com"),

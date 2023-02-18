@@ -380,9 +380,6 @@ mod_simple_results_server <- function(id, state, parent){
       dfA <- state$state_dfA
       dfB <- state$state_dfB
 
-      # TODO Remove
-      print(state$matching_variables)
-
       matches.out <- fastLink::fastLink(
         dfA = dfA,
         dfB = dfB,

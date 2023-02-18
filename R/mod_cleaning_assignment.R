@@ -88,7 +88,7 @@ mod_cleaning_assignment_ui <- function(id) {
                         "Birthday",
                         choices = NULL),
             selectInput(ns("race_dfA"),
-                        "Ethnicity",
+                        "Race",
                         choices = NULL)
           ),
           column(
@@ -180,7 +180,7 @@ mod_cleaning_assignment_ui <- function(id) {
                         "Birthday",
                         choices = NULL),
             selectInput(ns("race_dfB"),
-                        "Ethnicity",
+                        "Race",
                         choices = NULL)
           ),
           column(
@@ -641,23 +641,32 @@ mod_cleaning_assignment_server <- function(id, state, parent) {
         sex = input$sex_dfA
       )
 
-      if (input$firstname_dfA_format == "U") {
-        data$firstname <- toupper(data$firstname)
-      } else if (input$firstname_dfA_format == "L") {
-        data$firstname <- tolower(data$firstname)
+
+      if (input$firstname_dfA %not_in% c(NULL, "")) {
+        if (input$firstname_dfA_format == "U") {
+          data$firstname <- toupper(data$firstname)
+        } else if (input$firstname_dfA_format == "L") {
+          data$firstname <- tolower(data$firstname)
+        }
       }
-      if (input$middlename_dfA_format == "U") {
-        data$middlename <- toupper(data$middlename)
-      } else if (input$middlename_dfA_format == "L") {
-        data$middlename <- tolower(data$middlename)
+      if (input$middlename_dfA %not_in% c(NULL, "")) {
+        if (input$middlename_dfA_format == "U") {
+          data$middlename <- toupper(data$middlename)
+        } else if (input$middlename_dfA_format == "L") {
+          data$middlename <- tolower(data$middlename)
+        }
       }
-      if (input$lastname_dfA_format == "U") {
-        data$lastname <- toupper(data$lastname)
-      } else if (input$lastname_dfA_format == "L") {
-        data$lastname <- tolower(data$lastname)
+      if (input$lastname_dfA %not_in% c(NULL, "")) {
+        if (input$lastname_dfA_format == "U") {
+          data$lastname <- toupper(data$lastname)
+        } else if (input$lastname_dfA_format == "L") {
+          data$lastname <- tolower(data$lastname)
+        }
       }
 
       state$dfA_cleaned_assignment <- data # update state
+      state$state_dfA <- data # update state
+
       return(data)
     })
 
@@ -677,23 +686,33 @@ mod_cleaning_assignment_server <- function(id, state, parent) {
         sex = input$sex_dfB
       )
 
-      if (input$firstname_dfB_format == "U") {
-        data$firstname <- toupper(data$firstname)
-      } else if (input$firstname_dfB_format == "L") {
-        data$firstname <- tolower(data$firstname)
+      if (input$firstname_dfB %not_in% c(NULL, "")) {
+        if (input$firstname_dfB_format == "U") {
+          data$firstname <- toupper(data$firstname)
+        } else if (input$firstname_dfB_format == "L") {
+          data$firstname <- tolower(data$firstname)
+        }
       }
-      if (input$middlename_dfB_format == "U") {
-        data$middlename <- toupper(data$middlename)
-      } else if (input$middlename_dfB_format == "L") {
-        data$middlename <- tolower(data$middlename)
+
+      if (input$middlename_dfB %not_in% c(NULL, "")) {
+        if (input$middlename_dfB_format == "U") {
+          data$middlename <- toupper(data$middlename)
+        } else if (input$middlename_dfB_format == "L") {
+          data$middlename <- tolower(data$middlename)
+        }
       }
-      if (input$lastname_dfB_format == "U") {
-        data$lastname <- toupper(data$lastname)
-      } else if (input$lastname_dfB_format == "L") {
-        data$lastname <- tolower(data$lastname)
+
+      if (input$lastname_dfB %not_in% c(NULL, "")) {
+        if (input$lastname_dfB_format == "U") {
+          data$lastname <- toupper(data$lastname)
+        } else if (input$lastname_dfB_format == "L") {
+          data$lastname <- tolower(data$lastname)
+        }
       }
 
       state$dfB_cleaned_assignment <- data # update state
+      state$state_dfB <- data # update state
+
       return(data)
     })
 

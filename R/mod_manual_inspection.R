@@ -40,7 +40,7 @@ mod_manual_inspection_ui <- function(id) {
           textInput(ns("birthday_dfA"), "Birthday"),
           textInput(ns("birthday_dfB"), NULL),
 
-          textInput(ns("race_dfA"), "Ethnicity"),
+          textInput(ns("race_dfA"), "Race"),
           textInput(ns("race_dfB"), NULL),
 
         ),
@@ -78,7 +78,10 @@ mod_manual_inspection_ui <- function(id) {
 
 
       br(),
-      p('Your decision regarding this possible match will be recorded for these observations in a new variable called "Decision"'),
+      strong('Make your decision:'),
+      br(),
+      br(),
+
       fluidRow(
         column(
         width = 4,
@@ -93,6 +96,10 @@ mod_manual_inspection_ui <- function(id) {
         actionButton(ns("undecided_person"),"Undecided", icon = icon("question"), class = "btn-warning", width = "150px")
         )),
       br(),
+      strong('Your decision for this possible match will be saved in the variable called "Decision"'),
+      br(),
+      br(),
+
       fluidRow(
         column(width = 6,
                actionButton(ns("previous_row"),"Previous Row", icon = icon("chevron-left"), class = "btn-info", width = "150px")
@@ -105,19 +112,19 @@ mod_manual_inspection_ui <- function(id) {
 
     box(
       width = 12,
-      title = "Uncertainty Matches",
+      title = "Uncertain Matches",
       status = "success",
       column(12, DT::dataTableOutput(ns('uncertainty_matches')))
     ),
     box(
       width = 12,
-      title = "Confirmed Matches",
+      title = "Manually Confirmed Matches",
       status = "success",
       column(12, DT::dataTableOutput(ns('confirmed_matches')))
     ),
     box(
       width = 12,
-      title = "Confirmed Non-Matches",
+      title = "Manually Confirmed Non-Matches",
       status = "success",
       column(12, DT::dataTableOutput(ns('confirmed_non_matches')))
     ),
@@ -138,12 +145,12 @@ mod_manual_inspection_ui <- function(id) {
       ),
       column(
         width = 6,
-        actionBttn(
-          inputId = ns("next_download_all"),
+        downloadBttn(
+          outputId = ns("next_download_all"),
           label = "Next: Download All Files",
           style = "simple",
           color = "success",
-          icon = icon("cloud-arrow-down"),
+          icon = shiny::icon("download"),
           size = "sm"
         ),
         align = "right",
@@ -177,144 +184,192 @@ mod_manual_inspection_server <- function(id, state, parent) {
 
       updateTextInput(session, "level", "Level of Match:", level)
       updateTextInput(session, "decision", "Decision:", decision)
+
       updateTextInput(session, "firstname_dfA", "Firstname", firstname_dfA)
       updateTextInput(session, "firstname_dfB", NULL, firstname_dfB)
-      if (!is.null(firstname_dfA) &&
-          !is.null(firstname_dfB) &&
+      if (!is.null(firstname_dfA) && !is.null(firstname_dfB)) {
+        if (
           !is.na(firstname_dfA) &&
           !is.na(firstname_dfB) &&
           firstname_dfA != firstname_dfB) {
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-firstname_dfA').style.backgroundColor = 'yellow'"))
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-firstname_dfB').style.backgroundColor = 'yellow'"))
-      } else {
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-firstname_dfA').style.backgroundColor = ''"))
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-firstname_dfB').style.backgroundColor = ''"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-firstname_dfA').style.backgroundColor = 'yellow'"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-firstname_dfB').style.backgroundColor = 'yellow'"))
+        } else if ((is.na(firstname_dfA) && !is.na(firstname_dfB)) | (!is.na(firstname_dfA) && is.na(firstname_dfB))) {
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-firstname_dfA').style.backgroundColor = 'yellow'"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-firstname_dfB').style.backgroundColor = 'yellow'"))
+        } else {
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-firstname_dfA').style.backgroundColor = ''"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-firstname_dfB').style.backgroundColor = ''"))
+        }
       }
 
       updateTextInput(session, "middlename_dfA", "Middlename", middlename_dfA)
       updateTextInput(session, "middlename_dfB", NULL, middlename_dfB)
-      if (!is.null(middlename_dfA) &&
-          !is.null(middlename_dfB) &&
+
+      if (!is.null(middlename_dfA) && !is.null(middlename_dfB)){
+        if (
           !is.na(middlename_dfA) &&
           !is.na(middlename_dfB) &&
           middlename_dfA != middlename_dfB) {
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-middlename_dfA').style.backgroundColor = 'yellow'"))
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-middlename_dfB').style.backgroundColor = 'yellow'"))
-      } else {
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-middlename_dfA').style.backgroundColor = ''"))
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-middlename_dfB').style.backgroundColor = ''"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-middlename_dfA').style.backgroundColor = 'yellow'"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-middlename_dfB').style.backgroundColor = 'yellow'"))
+        } else if ((is.na(middlename_dfA) && !is.na(middlename_dfB)) | (!is.na(middlename_dfA) && is.na(middlename_dfB))) {
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-middlename_dfA').style.backgroundColor = 'yellow'"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-middlename_dfB').style.backgroundColor = 'yellow'"))
+        } else {
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-middlename_dfA').style.backgroundColor = ''"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-middlename_dfB').style.backgroundColor = ''"))
+        }
       }
+
 
       updateTextInput(session, "lastname_dfA", "Lastname", lastname_dfA)
       updateTextInput(session, "lastname_dfB", NULL, lastname_dfB)
-      if (!is.null(lastname_dfA) &&
-          !is.null(lastname_dfB) &&
-          !is.na(lastname_dfA) &&
-          !is.na(lastname_dfB) &&
-          lastname_dfA != lastname_dfB) {
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-lastname_dfA').style.backgroundColor = 'yellow'"))
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-lastname_dfB').style.backgroundColor = 'yellow'"))
-      } else {
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-lastname_dfA').style.backgroundColor = ''"))
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-lastname_dfB').style.backgroundColor = ''"))
-      }
+        if(!is.null(lastname_dfA) && !is.null(lastname_dfB)) {
+          if (!is.na(lastname_dfA) &&
+              !is.na(lastname_dfB) &&
+              lastname_dfA != lastname_dfB) {
+            shinyjs::runjs(paste0("document.getElementById('manual_inspection-lastname_dfA').style.backgroundColor = 'yellow'"))
+            shinyjs::runjs(paste0("document.getElementById('manual_inspection-lastname_dfB').style.backgroundColor = 'yellow'"))
+          } else if ((is.na(lastname_dfA) && !is.na(lastname_dfB)) | (!is.na(lastname_dfA) && is.na(lastname_dfB))) {
+            shinyjs::runjs(paste0("document.getElementById('manual_inspection-lastname_dfA').style.backgroundColor = 'yellow'"))
+            shinyjs::runjs(paste0("document.getElementById('manual_inspection-lastname_dfB').style.backgroundColor = 'yellow'"))
+          } else {
+            shinyjs::runjs(paste0("document.getElementById('manual_inspection-lastname_dfA').style.backgroundColor = ''"))
+            shinyjs::runjs(paste0("document.getElementById('manual_inspection-lastname_dfB').style.backgroundColor = ''"))
+          }
+        }
+
 
       updateTextInput(session, "birthday_dfA", "Birthday", birthday_dfA)
       updateTextInput(session, "birthday_dfB", NULL, birthday_dfB)
-      if (!is.null(birthday_dfA) &&
-          !is.null(birthday_dfB) &&
+      if (!is.null(birthday_dfA) && !is.null(birthday_dfB)) {
+        if (
           !is.na(birthday_dfA) &&
           !is.na(birthday_dfB) &&
           birthday_dfA != birthday_dfB) {
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-birthday_dfA').style.backgroundColor = 'yellow'"))
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-birthday_dfB').style.backgroundColor = 'yellow'"))
-      } else {
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-birthday_dfA').style.backgroundColor = ''"))
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-birthday_dfB').style.backgroundColor = ''"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-birthday_dfA').style.backgroundColor = 'yellow'"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-birthday_dfB').style.backgroundColor = 'yellow'"))
+        } else if ((is.na(birthday_dfA) && !is.na(birthday_dfB)) | (!is.na(birthday_dfA) && is.na(birthday_dfB))) {
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-birthday_dfA').style.backgroundColor = 'yellow'"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-birthday_dfB').style.backgroundColor = 'yellow'"))
+        } else {
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-birthday_dfA').style.backgroundColor = ''"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-birthday_dfB').style.backgroundColor = ''"))
+        }
       }
 
-      updateTextInput(session, "race_dfA", "Ethnicity", race_dfA)
+
+      updateTextInput(session, "race_dfA", "Race", race_dfA)
       updateTextInput(session, "race_dfB", NULL, race_dfB)
-      if (!is.null(race_dfA) &&
-          !is.null(race_dfB) &&
+      if (!is.null(race_dfA) && !is.null(race_dfB)) {
+        if (
           !is.na(race_dfA) &&
           !is.na(race_dfB) &&
           race_dfA != race_dfB) {
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-race_dfA').style.backgroundColor = 'yellow'"))
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-race_dfB').style.backgroundColor = 'yellow'"))
-      } else {
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-race_dfA').style.backgroundColor = ''"))
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-race_dfB').style.backgroundColor = ''"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-race_dfA').style.backgroundColor = 'yellow'"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-race_dfB').style.backgroundColor = 'yellow'"))
+        } else if ((is.na(race_dfA) && !is.na(race_dfB)) | (!is.na(race_dfA) && is.na(race_dfB))) {
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-race_dfA').style.backgroundColor = 'yellow'"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-race_dfB').style.backgroundColor = 'yellow'"))
+        } else {
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-race_dfA').style.backgroundColor = ''"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-race_dfB').style.backgroundColor = ''"))
+        }
       }
+
 
       updateTextInput(session, "sex_dfA", "Sex", sex_dfA)
       updateTextInput(session, "sex_dfB", NULL, sex_dfB)
-      if (!is.null(sex_dfA) &&
-          !is.null(sex_dfB) &&
+      if (!is.null(sex_dfA) && !is.null(sex_dfB)) {
+        if (
           !is.na(sex_dfA) &&
           !is.na(sex_dfB) &&
           sex_dfA != sex_dfB) {
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-sex_dfA').style.backgroundColor = 'yellow'"))
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-sex_dfB').style.backgroundColor = 'yellow'"))
-      } else {
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-sex_dfA').style.backgroundColor = ''"))
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-sex_dfB').style.backgroundColor = ''"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-sex_dfA').style.backgroundColor = 'yellow'"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-sex_dfB').style.backgroundColor = 'yellow'"))
+        } else if ((is.na(sex_dfA) && !is.na(sex_dfB)) | (!is.na(sex_dfA) && is.na(sex_dfB))) {
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-sex_dfA').style.backgroundColor = 'yellow'"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-sex_dfB').style.backgroundColor = 'yellow'"))
+        } else {
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-sex_dfA').style.backgroundColor = ''"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-sex_dfB').style.backgroundColor = ''"))
+        }
       }
+
 
       updateTextInput(session, "housenum_dfA", "Housenum", housenum_dfA)
       updateTextInput(session, "housenum_dfB", NULL, housenum_dfB)
-      if (!is.null(housenum_dfA) &&
-          !is.null(housenum_dfB) &&
+      if (!is.null(housenum_dfA) && !is.null(housenum_dfB)) {
+        if (
           !is.na(housenum_dfA) &&
           !is.na(housenum_dfB) &&
           housenum_dfA != housenum_dfB) {
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-housenum_dfA').style.backgroundColor = 'yellow'"))
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-housenum_dfB').style.backgroundColor = 'yellow'"))
-      } else {
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-housenum_dfA').style.backgroundColor = ''"))
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-housenum_dfB').style.backgroundColor = ''"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-housenum_dfA').style.backgroundColor = 'yellow'"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-housenum_dfB').style.backgroundColor = 'yellow'"))
+        } else if ((is.na(housenum_dfA) && !is.na(housenum_dfB)) | (!is.na(housenum_dfA) && is.na(housenum_dfB))) {
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-housenum_dfA').style.backgroundColor = 'yellow'"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-housenum_dfB').style.backgroundColor = 'yellow'"))
+        } else {
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-housenum_dfA').style.backgroundColor = ''"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-housenum_dfB').style.backgroundColor = ''"))
+        }
       }
 
       updateTextInput(session, "streetname_dfA", "Streetname", streetname_dfA)
       updateTextInput(session, "streetname_dfB", NULL, streetname_dfB)
-      if (!is.null(streetname_dfA) &&
-          !is.null(streetname_dfB) &&
+
+      if (!is.null(streetname_dfA) && !is.null(streetname_dfB)) {
+        if (
           !is.na(streetname_dfA) &&
           !is.na(streetname_dfB) &&
           streetname_dfA != streetname_dfB) {
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-streetname_dfA').style.backgroundColor = 'yellow'"))
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-streetname_dfB').style.backgroundColor = 'yellow'"))
-      } else {
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-streetname_dfA').style.backgroundColor = ''"))
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-streetname_dfB').style.backgroundColor = ''"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-streetname_dfA').style.backgroundColor = 'yellow'"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-streetname_dfB').style.backgroundColor = 'yellow'"))
+        } else if ((is.na(streetname_dfA) && !is.na(streetname_dfB)) | (!is.na(streetname_dfA) && is.na(streetname_dfB))) {
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-streetname_dfA').style.backgroundColor = 'yellow'"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-streetname_dfB').style.backgroundColor = 'yellow'"))
+        } else {
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-streetname_dfA').style.backgroundColor = ''"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-streetname_dfB').style.backgroundColor = ''"))
+        }
       }
 
       updateTextInput(session, "city_dfA", "City", city_dfA)
       updateTextInput(session, "city_dfB", NULL, city_dfB)
-      if (!is.null(city_dfA) &&
-          !is.null(city_dfB) &&
+
+      if (!is.null(city_dfA) && !is.null(city_dfB)) {
+        if (
           !is.na(city_dfA) &&
           !is.na(city_dfB) &&
           city_dfA != city_dfB) {
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-city_dfA').style.backgroundColor = 'yellow'"))
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-city_dfB').style.backgroundColor = 'yellow'"))
-      } else {
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-city_dfA').style.backgroundColor = ''"))
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-city_dfB').style.backgroundColor = ''"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-city_dfA').style.backgroundColor = 'yellow'"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-city_dfB').style.backgroundColor = 'yellow'"))
+        } else if ((is.na(city_dfA) && !is.na(city_dfB)) | (!is.na(city_dfA) && is.na(city_dfB))) {
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-city_dfA').style.backgroundColor = 'yellow'"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-city_dfB').style.backgroundColor = 'yellow'"))
+        } else {
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-city_dfA').style.backgroundColor = ''"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-city_dfB').style.backgroundColor = ''"))
+        }
       }
 
       updateTextInput(session, "SSN_dfA", "SSN", SSN_dfA)
       updateTextInput(session, "SSN_dfB", NULL, SSN_dfB)
-      if (!is.null(SSN_dfA) &&
-          !is.null(SSN_dfB) &&
+      if (!is.null(SSN_dfA) && !is.null(SSN_dfB)) {
+        if (
           !is.na(SSN_dfA) &&
           !is.na(SSN_dfB) &&
           SSN_dfA != SSN_dfB) {
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-SSN_dfA').style.backgroundColor = 'yellow'"))
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-SSN_dfB').style.backgroundColor = 'yellow'"))
-      } else {
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-SSN_dfA').style.backgroundColor = ''"))
-        shinyjs::runjs(paste0("document.getElementById('manual_inspection-SSN_dfB').style.backgroundColor = ''"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-SSN_dfA').style.backgroundColor = 'yellow'"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-SSN_dfB').style.backgroundColor = 'yellow'"))
+        } else if ((is.na(SSN_dfA) && !is.na(SSN_dfB)) | (!is.na(SSN_dfA) && is.na(SSN_dfB))) {
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-SSN_dfA').style.backgroundColor = 'yellow'"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-SSN_dfB').style.backgroundColor = 'yellow'"))
+        } else {
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-SSN_dfA').style.backgroundColor = ''"))
+          shinyjs::runjs(paste0("document.getElementById('manual_inspection-SSN_dfB').style.backgroundColor = ''"))
+        }
       }
 
 
@@ -349,21 +404,18 @@ mod_manual_inspection_server <- function(id, state, parent) {
       if (input$decision == "Different Person") {
         vals$color <- "solid red"
       }
-
-
-
     })
 
     output$current_review_text <- renderText({
       current_review_text <-
         paste0(
-          "Row #",
+          "Match #",
           vals$current_reviewing,
           " of ",
           nrow(vals$uncertain_dfs),
-          " records with filters applied"
+          " to review"
         )
-      strong_text <- paste0("<b><span style='color:red;'>", current_review_text, "</span></b>")
+      strong_text <- paste0("<b><span style='color:black;'>", current_review_text, "</span></b>")
       HTML(strong_text)
     })
 
@@ -528,7 +580,9 @@ mod_manual_inspection_server <- function(id, state, parent) {
 
           currentA <- dfA[vals$uncertain_dfs$inds.a[vals$current_reviewing],]
           currentB <- dfB[vals$uncertain_dfs$inds.b[vals$current_reviewing],]
-
+          # TODO after development remove this
+          print(currentA)
+          print(currentB)
           update_review_data(
             level          = vals$uncertain_dfs$match_level[vals$current_reviewing],
             decision       = vals$uncertain_dfs$Decision[vals$current_reviewing],
@@ -929,10 +983,36 @@ mod_manual_inspection_server <- function(id, state, parent) {
     observeEvent(input$previous_simple_details, {
       updateTabItems(session = parent, "tabs", "simple_details")
     })
-    observeEvent(input$next_download_all, {
 
-      print("Now you download everythin!!!")
-    })
+    # Download all
+    output$next_download_all <- downloadHandler(
+      filename = function() {
+        paste('All-Results-', Sys.time(), '.zip', sep='')
+      },
+      content = function(file) {
+
+        write.csv(state$matched_results[['dfA.unmatch']], "Unique in Sample Data Set.csv", na = "")
+        write.csv(state$matched_results[['dfB.unmatch']], "Unique in Matching Data Set.csv", na = "")
+        write.csv(state$matched_results[['matched_intersect']], "Confirmed Matches.csv", na = "")
+        write.csv(state$matched_results[['matched_union']], "Linked Data.csv", na = "")
+        write.csv(uncertainty_matches(), "Uncertain Matches.csv", na = "")
+        write.csv(confirmed_matches(), "Manually Confirmed Matches.csv", na = "")
+        write.csv(confirmed_non_matches(), "Manually Confirmed Non-Matches.csv", na = "")
+
+        zip::zip(
+          file,
+          files = c(
+            'Unique in Sample Data Set.csv',
+            'Unique in Matching Data Set.csv',
+            'Confirmed Matches.csv',
+            'Linked Data.csv',
+            'Uncertain Matches.csv',
+            'Manually Confirmed Matches.csv',
+            'Manually Confirmed Non-Matches.csv'
+          )
+        )
+      }
+    )
 
   })
 }

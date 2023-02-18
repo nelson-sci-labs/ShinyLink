@@ -11,14 +11,19 @@ app_server <- function(input, output, session) {
     # Data frame during data cleaning
     dfA_uploaded = NULL,
     dfB_uploaded = NULL,
+    # True/FALSE
     dfA_cleaned_duplicate = NULL,
     dfB_cleaned_duplicate = NULL,
+
     dfA_cleaned_assignment = NULL,
     dfB_cleaned_assignment = NULL,
+
     dfA_cleaned_gender = NULL,
     dfB_cleaned_gender = NULL,
+
     dfA_cleaned_date = NULL,
     dfB_cleaned_date = NULL,
+
     dfA_cleaned_imputation = NULL,
     dfB_cleaned_imputation = NULL,
 
