@@ -483,7 +483,7 @@ mod_advanced_parameters_server <- function(id, state, session) {
         ),
         class = 'compact hover row-border nowrap stripe'
       )
-    }, server = FALSE)
+    }, server = TRUE)
 
     output[["info-main"]] <- renderText({
       capture.output(input[["matched_rows_selected"]])

@@ -103,7 +103,7 @@ mod_simple_details_server <- function(id, state, parent) {
       extensions = 'Buttons',
       selection = "multiple",
       rownames = FALSE,
-      server = FALSE,
+      server = TRUE,
       options = list(
         autoWidth = FALSE,
         scrollX = TRUE,
@@ -132,7 +132,7 @@ mod_simple_details_server <- function(id, state, parent) {
       extensions = 'Buttons',
       selection = "multiple",
       rownames = FALSE,
-      server = FALSE,
+      server = TRUE,
       options = list(
         autoWidth = FALSE,
         scrollX = TRUE,
@@ -159,7 +159,7 @@ mod_simple_details_server <- function(id, state, parent) {
       extensions = 'Buttons',
       selection = "multiple",
       rownames = FALSE,
-      server = FALSE,
+      server = TRUE,
       options = list(
         autoWidth = FALSE,
         scrollX = TRUE,
@@ -187,7 +187,7 @@ mod_simple_details_server <- function(id, state, parent) {
       extensions = 'Buttons',
       selection = "multiple",
       rownames = FALSE,
-      server = FALSE,
+      server = TRUE,
       options = list(
         autoWidth = FALSE,
         scrollX = TRUE,

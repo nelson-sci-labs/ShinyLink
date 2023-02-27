@@ -386,9 +386,10 @@ mod_simple_results_server <- function(id, state, parent){
         varnames = state$matching_variables,
         stringdist.match = state$string_matching,
         numeric.match = state$numeric_matching,
-        partial.match = state$partial_matching
+        partial.match = state$partial_matching,
         # cut.a = 0.9,
-        # cut.p = 0.8
+        # cut.p = 0.8,
+        n.cores = 16
       )
 
       # print(length(matches.out$matches$inds.a))
@@ -431,7 +432,7 @@ mod_simple_results_server <- function(id, state, parent){
           threshold.match = 0.75
         )
         matched_dfs <- tibble::as_tibble(matched_dfs)
-        print(matched_dfs)
+        # print(matched_dfs)
         # Get the column IDs with "gamma" and
         # colnames(matched_dfs)[grep("gamma", colnames(matched_dfs))] <- state$matching_variables
         # match_status codes: 2 = Exact, 1 = Partial, 0 = Different, NA = No data from both side
@@ -565,7 +566,7 @@ mod_simple_results_server <- function(id, state, parent){
         ),
         class = 'compact hover row-border nowrap stripe'
       )
-    }, server = FALSE)
+    }, server = TRUE)
 
     output[["info-main"]] <- renderText({
       capture.output(input[["matched_rows_selected"]])

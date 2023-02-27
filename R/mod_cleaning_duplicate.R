@@ -133,7 +133,7 @@ mod_cleaning_duplicate_server <- function(id, state, parent) {
       extensions = 'Buttons',
       selection = "single",
       rownames = FALSE,
-      server = FALSE,
+      server = TRUE,
       options = list(
         autoWidth = FALSE,
         scrollX = TRUE,
@@ -167,7 +167,7 @@ mod_cleaning_duplicate_server <- function(id, state, parent) {
       extensions = 'Buttons',
       selection = "single",
       rownames = FALSE,
-      server = FALSE,
+      server = TRUE,
       options = list(
         autoWidth = FALSE,
         scrollX = TRUE,

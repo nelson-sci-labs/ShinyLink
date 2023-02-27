@@ -213,7 +213,7 @@ mod_uploading_server <- function(id, state, parent){
 
       dfA <- load_file(basename(input$file_path_dfA$datapath),
                        input$file_path_dfA$datapath)
-      print(dfA)
+      # print(dfA)
 
       state$dfA_uploaded <- dfA
       return(dfA)
@@ -224,7 +224,7 @@ mod_uploading_server <- function(id, state, parent){
 
       dfB <- load_file(basename(input$file_path_dfB$datapath),
                        input$file_path_dfB$datapath)
-      print(dfB)
+      # print(dfB)
 
       state$dfB_uploaded <- dfB
       return(dfB)
@@ -329,7 +329,7 @@ mod_uploading_server <- function(id, state, parent){
       extensions = 'Buttons',
       selection = "single",
       rownames = FALSE,
-      server = FALSE,
+      server = TRUE,
       options = list(
         autoWidth = FALSE,
         scrollX = TRUE,
@@ -347,7 +347,7 @@ mod_uploading_server <- function(id, state, parent){
       extensions = 'Buttons',
       selection = "single",
       rownames = FALSE,
-      server = FALSE,
+      server = TRUE,
       options = list(
         autoWidth = FALSE,
         scrollX = TRUE,

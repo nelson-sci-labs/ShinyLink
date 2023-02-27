@@ -71,7 +71,7 @@ mod_advanced_details_server <- function(id, state, session){
       extensions = 'Buttons',
       selection = "multiple",
       rownames = FALSE,
-      server = FALSE,
+      server = TRUE,
       options = list(
         autoWidth = FALSE,
         scrollX = TRUE,
@@ -100,7 +100,7 @@ mod_advanced_details_server <- function(id, state, session){
       extensions = 'Buttons',
       selection = "multiple",
       rownames = FALSE,
-      server = FALSE,
+      server = TRUE,
       options = list(
         autoWidth = FALSE,
         scrollX = TRUE,
@@ -127,7 +127,7 @@ mod_advanced_details_server <- function(id, state, session){
       extensions = 'Buttons',
       selection = "multiple",
       rownames = FALSE,
-      server = FALSE,
+      server = TRUE,
       options = list(
         autoWidth = FALSE,
         scrollX = TRUE,
@@ -155,7 +155,7 @@ mod_advanced_details_server <- function(id, state, session){
       extensions = 'Buttons',
       selection = "multiple",
       rownames = FALSE,
-      server = FALSE,
+      server = TRUE,
       options = list(
         autoWidth = FALSE,
         scrollX = TRUE,
