@@ -172,8 +172,8 @@ mod_uploading_ui <- function(id){
 
 mod_uploading_server <- function(id, state, parent){
 
-  # File uploading limit: 10 MB
-  options(shiny.maxRequestSize = 10 * 1024 ^ 2)
+  # File uploading limit: 25 MB
+  options(shiny.maxRequestSize = 25 * 1024 ^ 2)
 
   moduleServer( id, function(input, output, session){
     ns <- session$ns

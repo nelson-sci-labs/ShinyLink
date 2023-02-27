@@ -1,6 +1,6 @@
 Package: ShinyLink
 Title: 'Shiny' Based Record Linkage Tool
-Version: 0.5.2
+Version: 0.5.4
 Authors@R: c(
     person("Shufu", "Chen", role = c("aut"), email = "shufuchen@nelsonscilabs.com"),       
     person("John", "Tyburski", role = c("aut"), email = "jtyburski@nelsonscilabs.com"),
@@ -27,7 +27,7 @@ Imports:
     readxl,
     shiny (>= 1.7.2),
     shinydashboard,
-    shinydashboardPlus,
+    shinydashboardPlus (>= 2.0.3),
     shinyWidgets,
     tidyr,
     tidyselect,

@@ -32,3 +32,7 @@ run_app()
 # [x] - 09. Add manual inspection module, allow users to decide level of uncertainty before review matches.
 # [x] - 10. Fix the issue that different data input format generates different matching results
 
+# TODO New features and bug fixes
+# [ ] - 01. Files size, numbers of entries limitation and blocking? 
+# [ ] - 02. Manual review page the order 
+# [ ] - 03. New looking?

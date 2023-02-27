@@ -987,7 +987,7 @@ mod_manual_inspection_server <- function(id, state, parent) {
     # Download all
     output$next_download_all <- downloadHandler(
       filename = function() {
-        paste('All-Results-', Sys.time(), '.zip', sep='')
+        paste('All-Results-', sub(" ", "-", gsub(":", "-", Sys.time())), '.zip', sep='')
       },
       content = function(file) {
 
