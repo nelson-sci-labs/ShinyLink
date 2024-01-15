@@ -43,8 +43,6 @@ Suggests:
     spelling,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-URL: https://shinylink.org/, https://github.com/nelson-sci-labs/ShinyLink
-BugReports: https://github.com/nelson-sci-labs/ShinyLink/issues
 Encoding: UTF-8
 Language: en-US
 LazyData: true
